@@ -7,7 +7,6 @@ public interface GameObject {
     public int getDamageRate();
     public int getCapacity();
 
-    public String getName();
     public String getAttackSoundFilePath();
     public String getDeathSoundFilePath();
     public String getCharacterSpriteFilePath();

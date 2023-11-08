@@ -17,10 +17,22 @@ public abstract class Unit implements GameObject {
     protected String deathSoundFilePath;
     protected String characterSpriteFilePath;
 
-    protected static List<? extends Unit> globalUnits;
+    protected static List<Unit> globalUnits;
     protected List<? extends Unit> unitsInRange;
 
     protected Coordinates coordinates;
+
+
+    /*---------- Getters ---------- */
+    public Unit(int damage, int damageRate, int range, int capacity, String attackSoundFilePath, 
+    String characterSpriteFilePath, Coordinates coordinates){
+        this.damage = damage;
+        this.damageRate = damageRate;
+        this.capacity = capacity;
+        this.attackSoundFilePath = attackSoundFilePath;
+        this.characterSpriteFilePath = characterSpriteFilePath;
+        this.coordinates = coordinates;
+    }
 
 
     /*---------- Getters ---------- */
@@ -55,6 +67,10 @@ public abstract class Unit implements GameObject {
 
     public String getCharacterSpriteFilePath(){
         return this.characterSpriteFilePath;
+    }
+
+    public static List<Unit> getGlobalUnitList(){
+        return Unit.globalUnits;
     }
 
     public List<? extends Unit> getUnitsInRange(int range, List<? extends Unit> globalUnits){

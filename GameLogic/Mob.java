@@ -1,15 +1,24 @@
 package GameLogic;
 
+import Exceptions.NoSuchCoordinateKeyException;
+
 public abstract class Mob extends Unit{
 
     /*---------- Attributes ---------- */
 
     protected int speed;
     protected int hp;
+    protected String deathSoundFilePath;
 
 
     /*---------- Constructor ---------- */
-
+    public Mob(int speed, int hp, int damage, int damageRate, int range, int capacity, String attackSoundFilePath, 
+    String deathSoundFilePath, String characterSpriteFilePath, Coordinates coordinates){
+        super(damage, damageRate, range, capacity, attackSoundFilePath, characterSpriteFilePath, coordinates);
+        this.hp = hp;
+        this.speed = speed;
+        this.deathSoundFilePath = deathSoundFilePath;
+    }
 
 
     /*---------- Getters ---------- */
@@ -40,8 +49,13 @@ public abstract class Mob extends Unit{
 
 
     /*---------- Methods ---------- */
-    public void Move(){
-        // utilize object speed to transform the coordinates (using the setter)
+    public void move(){
+        try {
+            this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + this.getSpeed());
+            System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
+        } catch (NoSuchCoordinateKeyException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

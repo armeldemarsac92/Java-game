@@ -1,35 +1,18 @@
 package GameLogic;
 
+import Exceptions.*;
+
 public class Tower extends Unit {
 
     /*---------- Attributes ---------- */
 
     private int price;
-
-    // protected int damage;
-    // protected int capacity;
-    // protected int damageRate;
-
-    // protected float range;
-
-    // protected String name;
-    // protected String attackSoundFilePath;
-    // protected String deathSoundFilePath;
-    // protected String characterSpriteFilePath;
-
-    // protected static List<? extends Unit> globalUnits;
-    // protected List<? extends Unit> unitsInRange;
-
-    // protected Map<String, Integer> coordinates;
+    private int level = 0;
 
     /*---------- Constructor ---------- */
-    public Tower(){
-        this.setDamage(1);
-        this.setCapacity(1);
-        this.setDamageRate(1);
-        this.setRange(2.0f);
-        this.setName("Level_1");
-        this.setCoordinates(new Coordinates(0, 2));
+    public Tower(int damage, int damageRate, int range, int capacity, String attackSoundFilePath,
+     String characterSpriteFilePath, Coordinates coordinates){
+        super(damage, damageRate, range, capacity, attackSoundFilePath, characterSpriteFilePath, coordinates);
 
         System.out.println("----------- Tower instantiated -----------");
         System.out.println("Damage: " + this.getDamage());
@@ -45,6 +28,10 @@ public class Tower extends Unit {
 
     public int getPrice(){
         return this.price;
+    }
+
+    public int getLevel(){
+        return this.level;
     }
 
 
@@ -82,15 +69,24 @@ public class Tower extends Unit {
         this.attackSoundFilePath = attackSoundFilePath;
     }
 
+    public void setLevel(int level){
+        this.level = level;
+    }
+
 
     /*---------- Methods ---------- */
     
-    public void upgrade(){
-        // Set damage * 2 (until tower 2)
-        // Set name
-        // Set sprite
-        // set capacity + 1 (until 2)
-        // Set attackSound
-        // set damageRate * 2 (until tower 2)
+    public void upgrade() throws MaximumLevelReachedException{
+        System.out.println(this.level);
+        if(this.level >= 2){
+            throw new MaximumLevelReachedException("Maximim level reached " + "(" + this.level + ")");
+        }
+        else{
+            this.setLevel(this.level + 1); //upgrade level
+            this.setDamage(this.getDamage() * 2); // increase damage
+            this.setCharacterSpriteFilePath("Sprite level " + this.level); // change sprite
+            this.setAttackSoundFilePath("Attack level " + this.level); // change sound
+            this.setDamageRate(this.getDamageRate() * 2); // increase damage rate
+        }
     }
 }
