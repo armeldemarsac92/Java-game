@@ -10,7 +10,7 @@ public interface GameObject {
 
     public Image getAttackSoundFilePath();
     public Image getDeathSoundFilePath();
-    public Image getCharacterSpriteFilePath();
+    public Image getCharacterSpriteImage();
 
     public Coordinates getUnitCoordinates();
     

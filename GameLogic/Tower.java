@@ -18,7 +18,7 @@ public class Tower extends Unit {
     public Tower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
         super(damage, damageRate, range, capacity, coordinates);
         try {
-            this.characterSpriteFilePath = ImageIO.read(new File("assets/tower_lvl0.png"));
+            this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -66,7 +66,7 @@ public class Tower extends Unit {
     }   
 
     public void setCharacterSpriteFilePath(Image characterSpriteFilePath){
-        this.characterSpriteFilePath = characterSpriteFilePath;
+        this.characterSpriteImage = characterSpriteFilePath;
     }
 
     public void setAttackSoundFilePath(Image attackSoundFilePath){
