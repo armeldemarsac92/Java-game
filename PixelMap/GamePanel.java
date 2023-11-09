@@ -29,7 +29,13 @@ public class GamePanel extends JPanel {
             e.printStackTrace();
             // Handle the error here - perhaps set a default background color instead
         }
-        this.towers.add(new Tower(1,1,1,1, new Coordinates(500, 400)));
+        this.towers.add(new Tower(1,1,1,1, new Coordinates(400, 400)));
+        this.towers.add(new Tower(1,1,1,1, new Coordinates(1100, 400)));
+        this.towers.add(new Tower(1,1,1,1, new Coordinates(1800, 400)));
+        this.towers.add(new Tower(1,1,1,1, new Coordinates(1500, 800)));
+        this.towers.add(new Tower(1,1,1,1, new Coordinates(750, 800)));
+
+
     }
 
     @Override
@@ -50,7 +56,10 @@ public class GamePanel extends JPanel {
         //     g.drawLine(0, y, MAP_WIDTH, y);
         // }
 
-        this.towers.get(0).draw(g, GRID_CELL_SIZE);
+
+        for (Tower tower : towers) {
+            tower.draw(g, GRID_CELL_SIZE);
+        }
     }
 
     protected void paintTower(Graphics g) {
