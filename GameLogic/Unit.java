@@ -1,7 +1,10 @@
 package GameLogic;
 
-import java.util.Dictionary;
+import java.util.ArrayList;
 import java.util.List;
+
+import Exceptions.NoSuchCoordinateKeyException;
+
 import java.awt.*;
 
 public abstract class Unit implements GameObject {
@@ -18,15 +21,24 @@ public abstract class Unit implements GameObject {
 
     protected Image attackSoundFilePath;
     protected Image deathSoundFilePath;
-    protected Image characterSpriteFilePath;
+    protected Image characterSpriteImage;
 
     protected List<? extends Unit> unitsInRange;
 
     protected Coordinates coordinates;
 
 
-    /*---------- Getters ---------- */
+    /*---------- Constructor ---------- */
+    
     public Unit(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
+        List<Integer> unitCoordinates = new ArrayList<Integer>();
+        try {
+            unitCoordinates.add(coordinates.get("x"));
+            unitCoordinates.add(coordinates.get("y"));
+        } catch (NoSuchCoordinateKeyException e) {
+            System.out.println(e.getMessage());
+        }
+
         Unit.counter++;
         this.id = Unit.counter;
         this.damage = damage;
@@ -34,10 +46,7 @@ public abstract class Unit implements GameObject {
         this.capacity = capacity;
         this.coordinates = coordinates;
         GlobalUnits.add(this);
-        // GlobalUnitsCoordinates.add(new Dictionary<Unit,Coordinates>() {
-            
-
-        // });
+        GlobalUnitsCoordinates.add(this.getId(), unitCoordinates);
     }
 
 
@@ -75,8 +84,8 @@ public abstract class Unit implements GameObject {
         return this.deathSoundFilePath;
     }
 
-    public Image getCharacterSpriteFilePath(){
-        return this.characterSpriteFilePath;
+    public Image getCharacterSpriteImage(){
+        return this.characterSpriteImage;
     }
 
     public List<? extends Unit> getUnitsInRange(int range, List<? extends Unit> globalUnits){
@@ -99,6 +108,23 @@ public abstract class Unit implements GameObject {
     public void attackUnitsInRange(List<? extends Unit> unitsInRange){
         System.out.println(unitsInRange);
         System.out.println(this.getCapacity());
+    }
+
+    public Point getBlockCoordinates(int blockSize){
+        try {
+            return new Point(this.getUnitCoordinates().get("x") / blockSize, this.getUnitCoordinates().get("y") / blockSize);
+        } catch (NoSuchCoordinateKeyException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void draw(Graphics graphics, int blockSize){
+        Point blockCoordinates = getBlockCoordinates(blockSize);
+        int drawX = blockCoordinates.x * blockSize;
+        int drawY = blockCoordinates.y * blockSize;
+
+        graphics.drawImage(this.characterSpriteImage, drawX, drawY, null);
     }
 
 }

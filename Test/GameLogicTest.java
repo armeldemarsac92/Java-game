@@ -14,6 +14,8 @@ public class GameLogicTest {
             System.out.println(GlobalUnits.getGlobalUnits().get(i).getId());
         }
 
+        // System.out.println(GlobalUnitsCoordinates.getGlobalUnitsCoordinates().get(tower.getId()));
+
         for(int i = 0; i < 10; i++){
             barbarian.move();   
         }
