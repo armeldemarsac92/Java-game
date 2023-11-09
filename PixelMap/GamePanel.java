@@ -5,13 +5,19 @@ import java.awt.*;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import Exceptions.*;
+import GameLogic.*;
 
 public class GamePanel extends JPanel {
 
-    private static final int GRID_CELL_SIZE = 32; // Change this to your desired grid size
+    private static final int GRID_CELL_SIZE = 50; // Change this to your desired grid size
     private static final int MAP_WIDTH = 3840;
     private static final int MAP_HEIGHT = 2160;
     private Image backgroundImage;
+    private List<Tower> towers = new ArrayList<Tower>();
 
     public GamePanel() {
         // Set the size of the panel to match the map
@@ -23,6 +29,7 @@ public class GamePanel extends JPanel {
             e.printStackTrace();
             // Handle the error here - perhaps set a default background color instead
         }
+        this.towers.add(new Tower(1,1,1,1, new Coordinates(500, 400)));
     }
 
     @Override
@@ -35,13 +42,19 @@ public class GamePanel extends JPanel {
         }
 
         // Draw the grid on top of the background image
-        g.setColor(Color.GRAY); // Set the grid color to gray, or any other color you prefer
-        for (int x = 0; x <= MAP_WIDTH; x += GRID_CELL_SIZE) {
-            g.drawLine(x, 0, x, MAP_HEIGHT);
-        }
-        for (int y = 0; y <= MAP_HEIGHT; y += GRID_CELL_SIZE) {
-            g.drawLine(0, y, MAP_WIDTH, y);
-        }
+        // g.setColor(Color.GRAY); // Set the grid color to gray, or any other color you prefer
+        // for (int x = 0; x <= MAP_WIDTH; x += GRID_CELL_SIZE) {
+        //     g.drawLine(x, 0, x, MAP_HEIGHT);
+        // }
+        // for (int y = 0; y <= MAP_HEIGHT; y += GRID_CELL_SIZE) {
+        //     g.drawLine(0, y, MAP_WIDTH, y);
+        // }
+
+        this.towers.get(0).draw(g, GRID_CELL_SIZE);
+    }
+
+    protected void paintTower(Graphics g) {
+
     }
 
     public static void main(String[] args) {
@@ -52,6 +65,7 @@ public class GamePanel extends JPanel {
             frame.pack();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
+
         });
     }
 }

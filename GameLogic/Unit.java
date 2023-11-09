@@ -121,10 +121,13 @@ public abstract class Unit implements GameObject {
 
     public void draw(Graphics graphics, int blockSize){
         Point blockCoordinates = getBlockCoordinates(blockSize);
-        int drawX = blockCoordinates.x * blockSize;
-        int drawY = blockCoordinates.y * blockSize;
+        int width = 150;
+        int height = 100;
+        int drawX = (blockCoordinates.x * blockSize) - (width / 2);
+        int drawY = (blockCoordinates.y * blockSize) - (height / 2);
 
-        graphics.drawImage(this.characterSpriteImage, drawX, drawY, null);
+
+        graphics.drawImage(this.characterSpriteImage, drawX, drawY, width, height, null);
     }
 
 }
