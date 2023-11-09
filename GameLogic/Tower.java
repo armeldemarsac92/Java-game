@@ -10,16 +10,15 @@ public class Tower extends Unit {
     private int level = 0;
 
     /*---------- Constructor ---------- */
-    public Tower(int damage, int damageRate, int range, int capacity, String attackSoundFilePath,
-     String characterSpriteFilePath, Coordinates coordinates){
-        super(damage, damageRate, range, capacity, attackSoundFilePath, characterSpriteFilePath, coordinates);
+    public Tower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
+        super(damage, damageRate, range, capacity, coordinates);
 
         System.out.println("----------- Tower instantiated -----------");
+        System.out.println("Id: " + this.getId());
         System.out.println("Damage: " + this.getDamage());
         System.out.println("Capacity: " + this.getCapacity());
         System.out.println("Damage rate: " + this.getDamageRate());
         System.out.println("Range: " + this.getRange());
-        System.out.println("Name: " + this.getName());
         System.out.println("Coordinates: " + this.getUnitCoordinates().getCoordinates());
     }
 
@@ -47,10 +46,6 @@ public class Tower extends Unit {
 
     public void setPrice(int price){
         this.price = price;
-    }
-
-    public void setName(String name){
-        this.name = name;
     }
 
     public void setCapacity(int capacity){

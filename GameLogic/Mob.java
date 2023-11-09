@@ -12,12 +12,10 @@ public abstract class Mob extends Unit{
 
 
     /*---------- Constructor ---------- */
-    public Mob(int speed, int hp, int damage, int damageRate, int range, int capacity, String attackSoundFilePath, 
-    String deathSoundFilePath, String characterSpriteFilePath, Coordinates coordinates){
-        super(damage, damageRate, range, capacity, attackSoundFilePath, characterSpriteFilePath, coordinates);
+    public Mob(int speed, int hp, int damage, int damageRate, int range, int capacity,Coordinates coordinates){
+        super(damage, damageRate, range, capacity, coordinates);
         this.hp = hp;
         this.speed = speed;
-        this.deathSoundFilePath = deathSoundFilePath;
     }
 
 

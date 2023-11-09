@@ -9,29 +9,29 @@ public abstract class Unit implements GameObject {
     protected int damage;
     protected int capacity;
     protected int damageRate;
+    protected static int counter = 0;
+    protected int id;
 
     protected float range;
 
-    protected String name;
     protected String attackSoundFilePath;
     protected String deathSoundFilePath;
     protected String characterSpriteFilePath;
 
-    protected static List<Unit> globalUnits;
     protected List<? extends Unit> unitsInRange;
 
     protected Coordinates coordinates;
 
 
     /*---------- Getters ---------- */
-    public Unit(int damage, int damageRate, int range, int capacity, String attackSoundFilePath, 
-    String characterSpriteFilePath, Coordinates coordinates){
+    public Unit(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
+        Unit.counter++;
+        this.id = Unit.counter;
         this.damage = damage;
         this.damageRate = damageRate;
         this.capacity = capacity;
-        this.attackSoundFilePath = attackSoundFilePath;
-        this.characterSpriteFilePath = characterSpriteFilePath;
         this.coordinates = coordinates;
+        GlobalUnits.add(this);
     }
 
 
@@ -49,12 +49,16 @@ public abstract class Unit implements GameObject {
         return this.damageRate;
     }
 
-    public float getRange(){
-        return this.damage;
+    public int getId(){
+        return this.id;
     }
 
-    public String getName(){
-        return this.name;
+    public static int getUnitsCount(){
+        return Unit.counter;
+    }
+
+    public float getRange(){
+        return this.damage;
     }
 
     public String getAttackSoundFilePath(){
@@ -67,10 +71,6 @@ public abstract class Unit implements GameObject {
 
     public String getCharacterSpriteFilePath(){
         return this.characterSpriteFilePath;
-    }
-
-    public static List<Unit> getGlobalUnitList(){
-        return Unit.globalUnits;
     }
 
     public List<? extends Unit> getUnitsInRange(int range, List<? extends Unit> globalUnits){
