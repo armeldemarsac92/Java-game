@@ -29,13 +29,11 @@ public class GamePanel extends JPanel {
             e.printStackTrace();
             // Handle the error here - perhaps set a default background color instead
         }
-        this.towers.add(new Tower(1,1,1,1, new Coordinates(400, 400)));
-        this.towers.add(new Tower(1,1,1,1, new Coordinates(1100, 400)));
-        this.towers.add(new Tower(1,1,1,1, new Coordinates(1800, 400)));
-        this.towers.add(new Tower(1,1,1,1, new Coordinates(1500, 800)));
-        this.towers.add(new Tower(1,1,1,1, new Coordinates(750, 800)));
-
-
+        this.towers.add(new Tower(1,1,1,1,false, new Coordinates(400, 400)));
+        this.towers.add(new Tower(1,1,1,1, false, new Coordinates(1100, 400)));
+        this.towers.add(new Tower(1,1,1,1, false, new Coordinates(1800, 400)));
+        this.towers.add(new Tower(1,1,1,1, false,new Coordinates(1500, 800)));
+        this.towers.add(new Tower(1,1,1,1, true, new Coordinates(750, 800)));
     }
 
     @Override

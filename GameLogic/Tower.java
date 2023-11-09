@@ -15,12 +15,22 @@ public class Tower extends Unit {
     private int level = 0;
 
     /*---------- Constructor ---------- */
-    public Tower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
+    public Tower(int damage, int damageRate, int range, int capacity, boolean upgrade, Coordinates coordinates){
         super(damage, damageRate, range, capacity, coordinates);
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+
+        if (upgrade){
+            try {
+                this.upgrade();
+            } catch (MaximumLevelReachedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
         }
         System.out.println("----------- Tower instantiated -----------");
         System.out.println("Id: " + this.getId());
@@ -91,6 +101,12 @@ public class Tower extends Unit {
             // this.setCharacterSpriteFilePath("Sprite level " + this.level); // change sprite
             // this.setAttackSoundFilePath("Attack level " + this.level); // change sound
             this.setDamageRate(this.getDamageRate() * 2); // increase damage rate
+            try {
+                this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl1.png"));
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+            
         }
     }
 }

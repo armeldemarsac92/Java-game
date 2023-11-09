@@ -1,7 +1,13 @@
 package PixelMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import Exceptions.MaximumLevelReachedException;
+import GameLogic.*;
 
 public class Game implements Runnable {
 
@@ -49,6 +55,17 @@ public class Game implements Runnable {
     }
 
     private void updateGame() {
+        List<Tower> towers = new ArrayList<>();
+        for(Unit unit : GlobalUnits.getGlobalUnits()){
+            if(unit instanceof Tower){
+                Tower castedUnit = (Tower) unit;
+                try {
+                    castedUnit.upgrade();
+                } catch (MaximumLevelReachedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         // Update your game state here
     }
 
