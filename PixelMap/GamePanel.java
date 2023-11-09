@@ -1,3 +1,5 @@
+package PixelMap;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -6,7 +8,7 @@ import java.io.IOException;
 
 public class GamePanel extends JPanel {
 
-    private static final int GRID_CELL_SIZE = 64; // Change this to your desired grid size
+    private static final int GRID_CELL_SIZE = 32; // Change this to your desired grid size
     private static final int MAP_WIDTH = 3840;
     private static final int MAP_HEIGHT = 2160;
     private Image backgroundImage;
@@ -16,7 +18,7 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(MAP_WIDTH, MAP_HEIGHT));
         // Load the background image
         try {
-            backgroundImage = ImageIO.read(new File("path/to/your/background/image.png"));
+            backgroundImage = ImageIO.read(new File("assets/background.png"));
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the error here - perhaps set a default background color instead
@@ -29,7 +31,7 @@ public class GamePanel extends JPanel {
 
         // Draw the background image
         if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, this);
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
         }
 
         // Draw the grid on top of the background image
