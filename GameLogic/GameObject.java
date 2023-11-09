@@ -1,15 +1,16 @@
 package GameLogic;
 
 import java.util.List;
+import java.awt.*;
 
 public interface GameObject {
     public int getDamage();
     public int getDamageRate();
     public int getCapacity();
 
-    public String getAttackSoundFilePath();
-    public String getDeathSoundFilePath();
-    public String getCharacterSpriteFilePath();
+    public Image getAttackSoundFilePath();
+    public Image getDeathSoundFilePath();
+    public Image getCharacterSpriteFilePath();
 
     public Coordinates getUnitCoordinates();
     
