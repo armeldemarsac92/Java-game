@@ -1,6 +1,8 @@
 package GameLogic;
 
+import java.util.Dictionary;
 import java.util.List;
+import java.awt.*;
 
 public abstract class Unit implements GameObject {
 
@@ -14,9 +16,9 @@ public abstract class Unit implements GameObject {
 
     protected float range;
 
-    protected String attackSoundFilePath;
-    protected String deathSoundFilePath;
-    protected String characterSpriteFilePath;
+    protected Image attackSoundFilePath;
+    protected Image deathSoundFilePath;
+    protected Image characterSpriteFilePath;
 
     protected List<? extends Unit> unitsInRange;
 
@@ -32,6 +34,10 @@ public abstract class Unit implements GameObject {
         this.capacity = capacity;
         this.coordinates = coordinates;
         GlobalUnits.add(this);
+        // GlobalUnitsCoordinates.add(new Dictionary<Unit,Coordinates>() {
+            
+
+        // });
     }
 
 
@@ -61,15 +67,15 @@ public abstract class Unit implements GameObject {
         return this.damage;
     }
 
-    public String getAttackSoundFilePath(){
+    public Image getAttackSoundFilePath(){
         return this.attackSoundFilePath;
     }
 
-    public String getDeathSoundFilePath(){
+    public Image getDeathSoundFilePath(){
         return this.deathSoundFilePath;
     }
 
-    public String getCharacterSpriteFilePath(){
+    public Image getCharacterSpriteFilePath(){
         return this.characterSpriteFilePath;
     }
 

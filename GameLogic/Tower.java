@@ -1,6 +1,11 @@
 package GameLogic;
 
 import Exceptions.*;
+import java.awt.*;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+
 
 public class Tower extends Unit {
 
@@ -12,7 +17,11 @@ public class Tower extends Unit {
     /*---------- Constructor ---------- */
     public Tower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
         super(damage, damageRate, range, capacity, coordinates);
-
+        try {
+            this.characterSpriteFilePath = ImageIO.read(new File("assets/tower_lvl0.png"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println("----------- Tower instantiated -----------");
         System.out.println("Id: " + this.getId());
         System.out.println("Damage: " + this.getDamage());
@@ -56,11 +65,11 @@ public class Tower extends Unit {
         this.damageRate = damageRate;
     }   
 
-    public void setCharacterSpriteFilePath(String characterSpriteFilePath){
+    public void setCharacterSpriteFilePath(Image characterSpriteFilePath){
         this.characterSpriteFilePath = characterSpriteFilePath;
     }
 
-    public void setAttackSoundFilePath(String attackSoundFilePath){
+    public void setAttackSoundFilePath(Image attackSoundFilePath){
         this.attackSoundFilePath = attackSoundFilePath;
     }
 
@@ -79,8 +88,8 @@ public class Tower extends Unit {
         else{
             this.setLevel(this.level + 1); //upgrade level
             this.setDamage(this.getDamage() * 2); // increase damage
-            this.setCharacterSpriteFilePath("Sprite level " + this.level); // change sprite
-            this.setAttackSoundFilePath("Attack level " + this.level); // change sound
+            // this.setCharacterSpriteFilePath("Sprite level " + this.level); // change sprite
+            // this.setAttackSoundFilePath("Attack level " + this.level); // change sound
             this.setDamageRate(this.getDamageRate() * 2); // increase damage rate
         }
     }
