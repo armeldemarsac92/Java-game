@@ -13,7 +13,7 @@ import GameLogic.*;
 
 public class GamePanel extends JPanel {
 
-    private static final int GRID_CELL_SIZE = 50; // Change this to your desired grid size
+    private static final int GRID_CELL_SIZE = 1; // Change this to your desired grid size
     private static final int MAP_WIDTH = 3840;
     private static final int MAP_HEIGHT = 2160;
     private Image backgroundImage;
@@ -57,6 +57,13 @@ public class GamePanel extends JPanel {
 
         for (Tower tower : towers) {
             tower.draw(g, GRID_CELL_SIZE);
+        }
+
+        for(Unit unit : GlobalUnits.getGlobalUnits()){
+            if(unit instanceof Barbarian){
+                ((Barbarian)unit).draw(g, GRID_CELL_SIZE);
+                    System.out.println("barbarian drawn");
+            }
         }
     }
 

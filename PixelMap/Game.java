@@ -1,12 +1,6 @@
 package PixelMap;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
-import Exceptions.MaximumLevelReachedException;
 import GameLogic.*;
 
 public class Game implements Runnable {
@@ -28,42 +22,64 @@ public class Game implements Runnable {
     }
 
     public void run() {
-        long startTime, elapsed, wait;
-        int frame = 0;
-
+        final int TARGET_FPS = 60;
+        final long TARGET_TIME = 1000 / TARGET_FPS; // Target time per frame in milliseconds
+        new Barbarian(1, 2, 2, 2, 2, 1, new Coordinates(10, 600));
+    
         while (running) {
-            startTime = System.nanoTime();
-            frame ++;
-            System.out.println(frame);
-
-            System.out.println(frame);
+            long start = System.currentTimeMillis();
+    
             updateGame(); // Update the game state
-            gamePanel.repaint(); // Render the game by repainting the panel
-
-            elapsed = System.nanoTime() - startTime;
-            wait = targetTime - elapsed / 1000000;
-            if (wait <= 0) {
-                wait = 5; // Just to yield the thread if we're running behind
-            }
-
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            gamePanel.repaint(); // Request a repaint
+    
+            long duration = System.currentTimeMillis() - start; // Time taken for updating and rendering
+            long waitTime = TARGET_TIME - duration; // Time to wait
+    
+            if (waitTime > 0) {
+                try {
+                    Thread.sleep(waitTime); // Wait until the end of the target frame time
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break; // Exit the game loop if the thread was interrupted
+                }
             }
         }
     }
+    
+
+    // public void run() {
+        
+    //     long startTime, elapsed, wait;
+    //     int frame = 0;
+
+    //     new Barbarian(1, 2, 2, 2, 2, 1, new Coordinates(10, 600));
+
+    //     while (running) {
+    //         startTime = System.nanoTime();
+    //         frame ++;
+    //         System.out.println(frame);
+    //         updateGame(); // Update the game state
+    //         gamePanel.repaint(); // Render the game by repainting the panel
+
+    //         elapsed = System.nanoTime() - startTime;
+    //         wait = targetTime - elapsed / 1000000;
+    //         if (wait <= 0) {
+    //             wait = 5; // Just to yield the thread if we're running behind
+    //         }
+
+    //         try {
+    //             Thread.sleep(wait);
+    //         } catch (InterruptedException e) {
+    //             e.printStackTrace();
+    //         }
+
+    //     }
+    // }
 
     private void updateGame() {
-        List<Tower> towers = new ArrayList<>();
         for(Unit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof Tower){
-                Tower castedUnit = (Tower) unit;
-                try {
-                    castedUnit.upgrade();
-                } catch (MaximumLevelReachedException e) {
-                    e.printStackTrace();
-                }
+            if(unit instanceof Mob){
+                ((Mob)unit).move();
             }
         }
         // Update your game state here
@@ -74,6 +90,7 @@ public class Game implements Runnable {
             Game game = new Game();
             game.frame.setVisible(true);
             new Thread(game).start(); // Start the game loop in a new thread.
+            
         });
     }
 }

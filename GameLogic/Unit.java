@@ -3,6 +3,8 @@ package GameLogic;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 import Exceptions.NoSuchCoordinateKeyException;
 
 import java.awt.*;
@@ -22,6 +24,7 @@ public abstract class Unit implements GameObject {
     protected Image attackSoundFilePath;
     protected Image deathSoundFilePath;
     protected Image characterSpriteImage;
+    protected ImageIcon mobSpriteImage;
 
     protected List<? extends Unit> unitsInRange;
 
