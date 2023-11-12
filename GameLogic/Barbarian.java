@@ -15,7 +15,7 @@ public class Barbarian extends Mob {
 
 
     public Barbarian(Coordinates coordinates) {
-        super(2, 50, 2, 1, 1, 1, coordinates);
+        super(2, 50, 2, 1, 1, 1, 5, coordinates);
         try {
             for (int i = 1; i <= 7; i++) {
                 Image frame = ImageIO.read(getClass().getResource("/assets/barbarian/barbarian-" + i + ".png"));
@@ -61,13 +61,13 @@ public class Barbarian extends Mob {
 
     @Override
     public void move(){
-    try {
-        this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + this.getSpeed());
-        System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
-        this.updateAnimation();
-    } catch (NoSuchCoordinateKeyException e) {
-        System.out.println(e.getMessage());
-    }
+        try {
+            this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + this.getSpeed());
+            System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
+            this.updateAnimation();
+        } catch (NoSuchCoordinateKeyException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

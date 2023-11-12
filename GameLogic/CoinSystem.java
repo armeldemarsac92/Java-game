@@ -8,11 +8,11 @@ public class CoinSystem {
         return CoinSystem.points;
     }
 
-    public void setCoins(int points){
+    public static void setCoins(int points){
         CoinSystem.points = points;
     }
 
-    public void earnCoins(int points){
+    public static void earnCoins(int points){
         CoinSystem.points += points;
     }
 }

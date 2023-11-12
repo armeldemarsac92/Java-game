@@ -19,5 +19,5 @@ public interface GameObject {
     public void setCoordinates(Coordinates coordinates);
     public void setUnitsInRange(List<Unit> unitsInRange);
     public void computeUnitsInRange();
-    public void attackUnitsInRange(List<Unit> unitsInRange);
+    public void attackUnitsInRange();
 }

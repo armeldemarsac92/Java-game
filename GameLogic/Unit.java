@@ -2,6 +2,7 @@ package GameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 
@@ -106,15 +107,36 @@ public abstract class Unit implements GameObject {
         this.coordinates = coordinates;
     }
 
-    public void setUnitsInRange(List<Unit> unitsInRange){
+    public void setUnitsInRange (List<Unit> unitsInRange){
         this.unitsInRange = unitsInRange;
     }
 
 
     /*---------- Methods ---------- */
-    public void attackUnitsInRange(List<Unit> unitsInRange){
-        System.out.println(unitsInRange);
-        System.out.println(this.getCapacity());
+    public void attackUnitsInRange(){
+        if(this.unitsInRange.size() > 0){
+            try {
+                // delay the action
+                TimeUnit.SECONDS.sleep(this.damageRate);
+                // attack each unit in range if it has enough capacity
+                for(int i = 0; i < this.unitsInRange.size(); i++){
+                    Mob unitToAttack = (Mob) this.unitsInRange.get(i);
+                    if(i <= this.capacity){
+                        System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
+                        + unitToAttack.getClass().getSimpleName() + "(" + unitToAttack.getHp() + " hp left)");
+                        if(unitToAttack.isAlive()){
+                            unitToAttack.setHp(this.getDamage());
+                        }
+                    }
+                }
+            } catch(InterruptedException e){
+                System.out.println(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+        }
+        else{
+            System.out.println("No unit in range");
+        }
     }
 
     public Point getBlockCoordinates(int blockSize){

@@ -11,16 +11,18 @@ public abstract class Mob extends Unit{
 
     protected int speed;
     protected int hp;
+    protected int coinValue;
     protected String deathSoundFilePath;
+    private boolean alive = true;
 
 
     /*---------- Constructor ---------- */
-    public Mob(int speed, int hp, int damage, int damageRate, int range, int capacity,Coordinates coordinates){
+    public Mob(int speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates){
         
         super(damage, damageRate, range, capacity, coordinates);
         this.hp = hp;
         this.speed = speed;
-
+        this.coinValue = coinValue;
     }
 
 
@@ -34,20 +36,34 @@ public abstract class Mob extends Unit{
         return this.hp;
     }
 
+    public int getCointValue(){
+        return this.coinValue;
+    }
+
+    public boolean isAlive(){
+        return this.alive;
+    }
+
 
     /*---------- Setters ---------- */
     
     public void setHp(int damage){
         int hpTemp = this.hp;
 
-        if(hpTemp - damage < 0){
+        if(hpTemp - damage <= 0){
             hpTemp = 0;
+            this.setAlive(false);
+            this.killInstance();
         }
         else{
             hpTemp -= damage;
         }
 
         this.hp = hpTemp;
+    }
+
+    public void setAlive(boolean alive){
+        this.alive = alive;
     }
 
 
@@ -100,6 +116,12 @@ public abstract class Mob extends Unit{
         // set the value
         this.setUnitsInRange(unitsInRangeTemp);
     }
+
+    public void killInstance(){
+        System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
+        GlobalUnits.remove(this);
+        CoinSystem.earnCoins(this.coinValue);
+    }   
 
 
 }

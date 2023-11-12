@@ -3,7 +3,7 @@ package GameLogic;
 public class Tanker extends Mob {
     /*---------- Constructor ---------- */
     public Tanker(Coordinates coordinates){
-        super(1, 100, 5, 1, 1, 1, coordinates);
+        super(1, 100, 5, 1, 1, 1, 10, coordinates);
 
         System.out.println("----------- Tanker instantiated -----------");
         System.out.println("Id: " + this.getId());

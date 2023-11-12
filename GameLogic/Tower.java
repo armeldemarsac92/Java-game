@@ -5,6 +5,9 @@ import java.awt.*;
 import java.io.File;
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class Tower extends Unit {
@@ -16,7 +19,7 @@ public class Tower extends Unit {
 
     /*---------- Constructor ---------- */
     public Tower(Coordinates coordinates){
-        super(1, 1, 100, 1, coordinates);
+        super(10, 1, 100, 1, coordinates);
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
         } catch (IOException e) {
@@ -97,6 +100,84 @@ public class Tower extends Unit {
                 System.out.println(e.getMessage());
             }
             
+        }
+    }
+
+    @Override 
+    public void computeUnitsInRange(){
+        // initialize empty list (serves as setter)
+        List<Unit> unitsInRangeTemp = new ArrayList<Unit>();
+        
+        // For each unit in global list
+        for(Unit unit : GlobalUnits.getGlobalUnits()){
+            if(unit instanceof Mob){
+                try {
+                    // get the absolute distance in x
+                    int unitXPos = unit.getUnitCoordinates().get("x");
+                    int xPos = this.getUnitCoordinates().get("x");
+                    float distanceX = Math.abs(xPos - unitXPos);
+
+                    // get the absolute distance in y
+                    int unitYPos = unit.getUnitCoordinates().get("y");
+                    int yPos = this.getUnitCoordinates().get("y");
+                    float distanceY = Math.abs(yPos - unitYPos);
+
+                    // get the hypothenus between the two
+                    double hypothenus = Math.hypot(distanceX, distanceY);
+
+                    System.out.println("Distance x between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceX);
+                    System.out.println("Distance y between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceY);
+                    System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
+
+                    // if the unit range >= distance between the two, push to temp list
+                    if((double) this.range <= hypothenus){
+                        unitsInRangeTemp.add((Mob) unit);
+                    }
+                } catch(NoSuchCoordinateKeyException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        // set the value
+        this.setUnitsInRange(unitsInRangeTemp);
+    }
+
+    @Override
+    public void attackUnitsInRange(){
+        List<Mob> attackableUnits = new ArrayList<Mob>();
+
+        for(Unit unit : this.unitsInRange){
+            if(unit instanceof Mob){
+                attackableUnits.add((Mob) unit);
+            }
+        }
+
+        if(attackableUnits.size() > 0){
+            try {
+                // delay the action
+                TimeUnit.SECONDS.sleep(this.damageRate);
+                // attack each unit in range if it has enough capacity
+                for(int i = 0; i < this.unitsInRange.size(); i++){
+                    Mob unitToAttack = (Mob) this.unitsInRange.get(i);
+                    if(i <= this.capacity){
+                        System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
+                        + unitToAttack.getClass().getSimpleName() + "(" + unitToAttack.getHp() + " hp left)");
+                        if(unitToAttack.isAlive()){
+                            unitToAttack.setHp(this.getDamage());
+                        }
+                        else{
+                            unitToAttack.killInstance();
+                        }
+                    }
+                }
+            } catch(InterruptedException e){
+                System.out.println(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+        }
+        else{
+            System.out.println("No unit in range");
         }
     }
 }
