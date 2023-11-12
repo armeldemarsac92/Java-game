@@ -1,5 +1,8 @@
 package GameLogic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Exceptions.NoSuchCoordinateKeyException;
 
 public abstract class Mob extends Unit{
@@ -56,6 +59,46 @@ public abstract class Mob extends Unit{
         } catch (NoSuchCoordinateKeyException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override 
+    public void computeUnitsInRange(){
+        // initialize empty list (serves as setter)
+        List<Unit> unitsInRangeTemp = new ArrayList<Unit>();
+        
+        // For each unit in global list
+        for(Unit unit : GlobalUnits.getGlobalUnits()){
+            if(unit instanceof Tower){
+                try {
+                    // get the absolute distance in x
+                    int unitXPos = unit.getUnitCoordinates().get("x");
+                    int xPos = this.getUnitCoordinates().get("x");
+                    float distanceX = Math.abs(xPos - unitXPos);
+
+                    // get the absolute distance in y
+                    int unitYPos = unit.getUnitCoordinates().get("y");
+                    int yPos = this.getUnitCoordinates().get("y");
+                    float distanceY = Math.abs(yPos - unitYPos);
+
+                    // get the hypothenus between the two
+                    double hypothenus = Math.hypot(distanceX, distanceY);
+
+                    System.out.println("Distance x between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceX);
+                    System.out.println("Distance y between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceY);
+                    System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
+
+                    // if the unit range >= distance between the two, push to temp list
+                    if((double) this.range <= hypothenus){
+                        unitsInRangeTemp.add(unit);
+                    }
+                } catch(NoSuchCoordinateKeyException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        // set the value
+        this.setUnitsInRange(unitsInRangeTemp);
     }
 
 

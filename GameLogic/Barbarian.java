@@ -40,6 +40,7 @@ public class Barbarian extends Mob {
         currentFrame = (currentFrame + 1) % frames.size();
     }
 
+
     @Override
     public void draw(Graphics graphics, int blockSize){
         Point blockCoordinates = getBlockCoordinates(blockSize);
