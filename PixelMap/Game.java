@@ -24,7 +24,7 @@ public class Game implements Runnable {
     public void run() {
         final int TARGET_FPS = 60;
         final long TARGET_TIME = 1000 / TARGET_FPS; // Target time per frame in milliseconds
-        new Barbarian(1, 2, 2, 2, 2, 1, new Coordinates(10, 600));
+        new Barbarian(new Coordinates(10, 600));
     
         while (running) {
             long start = System.currentTimeMillis();

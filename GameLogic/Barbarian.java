@@ -14,8 +14,8 @@ public class Barbarian extends Mob {
     private int currentFrame = 0;
 
 
-    public Barbarian(int speed, int hp, int damage, int damageRate, int range, int capacity, Coordinates coordinates) {
-        super(hp, speed, damage, damageRate, range, capacity, coordinates);
+    public Barbarian(Coordinates coordinates) {
+        super(2, 50, 2, 1, 1, 1, coordinates);
         try {
             for (int i = 1; i <= 7; i++) {
                 Image frame = ImageIO.read(getClass().getResource("/assets/barbarian/barbarian-" + i + ".png"));
@@ -24,6 +24,16 @@ public class Barbarian extends Mob {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("----------- Barbarian instantiated -----------");
+        System.out.println("Id: " + this.getId());
+        System.out.println("Hp: " + this.getHp());
+        System.out.println("Speed: " + this.getSpeed());
+        System.out.println("Damage: " + this.getDamage());
+        System.out.println("Capacity: " + this.getCapacity());
+        System.out.println("Damage rate: " + this.getDamageRate());
+        System.out.println("Range: " + this.getRange());
+        System.out.println("Coordinates: " + this.getUnitCoordinates().getCoordinates());
     }
 
     public void updateAnimation() {

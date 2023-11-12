@@ -7,26 +7,26 @@ import Exceptions.*;
 public class Coordinates {
     private Dictionary<String, Integer> coordinates = new Hashtable<>();
 
-    public Coordinates(int posAtX, int posAtY){
-        this.coordinates.put("x", posAtX);
-        this.coordinates.put("y", posAtY);
+    public Coordinates(int x, int y){
+        this.coordinates.put("x", x);
+        this.coordinates.put("y", y);
     }
 
     public Dictionary<String, Integer> getCoordinates(){
         return this.coordinates;
     }
 
-    public void setCoordinates(int posAtX, int posAtY){
-        this.coordinates.put("x", posAtX);
-        this.coordinates.put("y", posAtY);
+    public void setCoordinates(int x, int y){
+        this.coordinates.put("x", x);
+        this.coordinates.put("y", y);
     }
 
-    public void setXPos(int posOnX){
-        this.coordinates.put("x", posOnX);
+    public void setXPos(int x){
+        this.coordinates.put("x", x);
     }
 
-    public void setYPos(int posOnY){
-        this.coordinates.put("y", posOnY);
+    public void setYPos(int y){
+        this.coordinates.put("y", y);
     }
 
     public Integer get(String key) throws NoSuchCoordinateKeyException{

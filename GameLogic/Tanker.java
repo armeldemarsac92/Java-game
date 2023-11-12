@@ -2,8 +2,8 @@ package GameLogic;
 
 public class Tanker extends Mob {
     /*---------- Constructor ---------- */
-    public Tanker(int speed, int hp, int damage, int damageRate, int range, int capacity, Coordinates coordinates){
-        super(hp, speed, damage, damageRate, range, capacity, coordinates);
+    public Tanker(Coordinates coordinates){
+        super(1, 100, 5, 1, 1, 1, coordinates);
 
         System.out.println("----------- Tanker instantiated -----------");
         System.out.println("Id: " + this.getId());

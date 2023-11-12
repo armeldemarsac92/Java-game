@@ -26,7 +26,7 @@ public abstract class Unit implements GameObject {
     protected Image characterSpriteImage;
     protected ImageIcon mobSpriteImage;
 
-    protected List<? extends Unit> unitsInRange;
+    protected List<Unit> unitsInRange;
 
     protected Coordinates coordinates;
 
@@ -91,7 +91,7 @@ public abstract class Unit implements GameObject {
         return this.characterSpriteImage;
     }
 
-    public List<? extends Unit> getUnitsInRange(int range, List<? extends Unit> globalUnits){
+    public List<Unit> getUnitsInRange(){
         return this.unitsInRange;
     }
 
@@ -106,9 +106,13 @@ public abstract class Unit implements GameObject {
         this.coordinates = coordinates;
     }
 
+    public void setUnitsInRange(List<Unit> unitsInRange){
+        this.unitsInRange = unitsInRange;
+    }
+
 
     /*---------- Methods ---------- */
-    public void attackUnitsInRange(List<? extends Unit> unitsInRange){
+    public void attackUnitsInRange(List<Unit> unitsInRange){
         System.out.println(unitsInRange);
         System.out.println(this.getCapacity());
     }
@@ -135,6 +139,45 @@ public abstract class Unit implements GameObject {
     
         // Draw the image such that its bottom is aligned with the bottom of the grid cell
         graphics.drawImage(this.characterSpriteImage, drawX, drawY, width, height, null);
+    }
+
+    public void computeUnitsInRange(){
+        // initialize empty list (serves as setter)
+        List<Unit> unitsInRangeTemp = new ArrayList<Unit>();
+        
+        // For each unit in global list
+        for(Unit unit : GlobalUnits.getGlobalUnits()){
+            if(unit != this){
+                try {
+                    // get the absolute distance in x
+                    int unitXPos = unit.getUnitCoordinates().get("x");
+                    int xPos = this.getUnitCoordinates().get("x");
+                    float distanceX = Math.abs(xPos - unitXPos);
+
+                    // get the absolute distance in y
+                    int unitYPos = unit.getUnitCoordinates().get("y");
+                    int yPos = this.getUnitCoordinates().get("y");
+                    float distanceY = Math.abs(yPos - unitYPos);
+
+                    // get the hypothenus between the two
+                    double hypothenus = Math.hypot(distanceX, distanceY);
+
+                    System.out.println("Distance x between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceX);
+                    System.out.println("Distance y between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceY);
+                    System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
+
+                    // if the unit range >= distance between the two, push to temp list
+                    if((double) this.range <= hypothenus){
+                        unitsInRangeTemp.add(unit);
+                    }
+                } catch(NoSuchCoordinateKeyException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // set the value
+        this.setUnitsInRange(unitsInRangeTemp);
     }
     
 

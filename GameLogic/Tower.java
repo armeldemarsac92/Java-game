@@ -15,22 +15,12 @@ public class Tower extends Unit {
     private int level = 0;
 
     /*---------- Constructor ---------- */
-    public Tower(int damage, int damageRate, int range, int capacity, boolean upgrade, Coordinates coordinates){
-        super(damage, damageRate, range, capacity, coordinates);
+    public Tower(Coordinates coordinates){
+        super(1, 1, 100, 1, coordinates);
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
-
-        if (upgrade){
-            try {
-                this.upgrade();
-            } catch (MaximumLevelReachedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        } else {
         }
         System.out.println("----------- Tower instantiated -----------");
         System.out.println("Id: " + this.getId());
