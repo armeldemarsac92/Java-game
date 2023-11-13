@@ -122,20 +122,6 @@ public abstract class Unit implements GameObject {
         }
     }
 
-    public void draw(Graphics graphics, int blockSize){
-        Point blockCoordinates = getBlockCoordinates(blockSize);
-        int width = 150; // The width of the tower image
-        int height = 100; // The height of the tower image
-        
-        // Calculate the center for the x coordinate
-        int drawX = (blockCoordinates.x * blockSize) + (blockSize / 2) - (width / 2);
-        
-        // Calculate the bottom for the y coordinate
-        int drawY = (blockCoordinates.y * blockSize) + blockSize - height;
-    
-        // Draw the image such that its bottom is aligned with the bottom of the grid cell
-        graphics.drawImage(this.characterSpriteImage, drawX, drawY, width, height, null);
-    }
     
 
 }

@@ -1,62 +1,77 @@
 package GameLogic;
-import java.util.List;
 
-import javax.imageio.ImageIO;
+import javax.swing.*;
 
 import Exceptions.NoSuchCoordinateKeyException;
 
-import java.util.ArrayList;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Barbarian extends Mob {
-    private List<Image> frames = new ArrayList<>();
+    private JLabel barbarianLabel;
+    private List<ImageIcon> animationFrames;
     private int currentFrame = 0;
+    private Timer animationTimer;
 
-
-    public Barbarian(int speed, int hp, int damage, int damageRate, int range, int capacity, Coordinates coordinates) {
+    public Barbarian(int speed, int hp, int damage, int damageRate, int range, int capacity, Coordinates coordinates, Container parentContainer) {
         super(hp, speed, damage, damageRate, range, capacity, coordinates);
+
+        barbarianLabel = new JLabel();
         try {
-            for (int i = 1; i <= 7; i++) {
-                Image frame = ImageIO.read(getClass().getResource("/assets/barbarian/barbarian-" + i + ".png"));
-                frames.add(frame);
+            barbarianLabel.setBounds(coordinates.get("x"), coordinates.get("y"), 100, 100);
+        } catch (NoSuchCoordinateKeyException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } // Set initial position and size
+        parentContainer.add(barbarianLabel);
+        parentContainer.setComponentZOrder(barbarianLabel, 0);
+
+        loadAnimationFrames();
+        startAnimation();
+    }
+
+    private void loadAnimationFrames() {
+        animationFrames = new ArrayList<>();
+        try {
+            for (int i = 1; i <= 7; i++) { // numberOfFrames should be the number of images in your sequence
+                Image img = ImageIO.read(new File("assets/barbarian/Barbarian-" + i + ".png"));
+                Image scaledImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Scale image
+                animationFrames.add(new ImageIcon(scaledImg));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void updateAnimation() {
-        currentFrame = (currentFrame + 1) % frames.size();
+    private void startAnimation() {
+        animationTimer = new Timer(50, e -> updateAnimation()); // Adjust the delay (100ms here) as needed
+        animationTimer.start();
     }
 
+    private void updateAnimation() {
+        currentFrame = (currentFrame + 1) % animationFrames.size();
+        barbarianLabel.setIcon(animationFrames.get(currentFrame));
+    }
+
+    // Rest of your Barbarian class...
     @Override
-    public void draw(Graphics graphics, int blockSize){
-        Point blockCoordinates = getBlockCoordinates(blockSize);
-        int width = 200; // The width of the tower image
-        int height = 200; // The height of the tower image
-        
-        // Calculate the center for the x coordinate
-        int drawX = (blockCoordinates.x * blockSize);
-        
-        // Calculate the bottom for the y coordinate
-        int drawY = (blockCoordinates.y * blockSize);
-
-        Image currentFrameImage = frames.get(currentFrame);
-    
-        // Draw the image such that its bottom is aligned with the bottom of the grid cell
-        graphics.drawImage(currentFrameImage, drawX, drawY, width, height, null);
+    public void move() {
+        try {
+            // Update the position of the JLabel
+            Coordinates coords = getUnitCoordinates();
+            coords.setXPos(coords.get("x") + getSpeed());
+            barbarianLabel.setLocation(coords.get("x"), coords.get("y"));
+            // System.out.println("Pos on x: " + coords.get("x")); // Debug
+        } catch (NoSuchCoordinateKeyException e) {
+            System.out.println("no coordinates");
+            e.printStackTrace(); // Consider more meaningful exception handling
+        }
     }
-
-    @Override
-    public void move(){
-    try {
-        this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + this.getSpeed());
-        System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
-        this.updateAnimation();
-    } catch (NoSuchCoordinateKeyException e) {
-        System.out.println(e.getMessage());
-    }
-    }
-
 }
+
+
+
