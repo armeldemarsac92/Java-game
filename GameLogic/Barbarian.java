@@ -21,6 +21,7 @@ public class Barbarian extends Mob {
         super(hp, speed, damage, damageRate, range, capacity, coordinates);
 
         barbarianLabel = new JLabel();
+    
         try {
             barbarianLabel.setBounds(coordinates.get("x"), coordinates.get("y"), 100, 100);
         } catch (NoSuchCoordinateKeyException e) {
@@ -47,6 +48,10 @@ public class Barbarian extends Mob {
         }
     }
 
+    public JLabel getBarbarianLabel(){
+        return this.barbarianLabel;
+    }
+
     private void startAnimation() {
         animationTimer = new Timer(50, e -> updateAnimation()); // Adjust the delay (100ms here) as needed
         animationTimer.start();
@@ -57,6 +62,15 @@ public class Barbarian extends Mob {
         barbarianLabel.setIcon(animationFrames.get(currentFrame));
     }
 
+    public void cleanup() {
+        if (animationTimer != null) {
+            animationTimer.stop();
+        }
+        if (barbarianLabel.getParent() != null) {
+            barbarianLabel.getParent().remove(barbarianLabel);
+        }
+    }
+
     // Rest of your Barbarian class...
     @Override
     public void move() {
@@ -65,7 +79,7 @@ public class Barbarian extends Mob {
             Coordinates coords = getUnitCoordinates();
             coords.setXPos(coords.get("x") + getSpeed());
             barbarianLabel.setLocation(coords.get("x"), coords.get("y"));
-            // System.out.println("Pos on x: " + coords.get("x")); // Debug
+            System.out.println("Pos on x: " + coords.get("x")); // Debug
         } catch (NoSuchCoordinateKeyException e) {
             System.out.println("no coordinates");
             e.printStackTrace(); // Consider more meaningful exception handling

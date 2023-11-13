@@ -113,14 +113,7 @@ public abstract class Unit implements GameObject {
         System.out.println(this.getCapacity());
     }
 
-    public Point getBlockCoordinates(int blockSize){
-        try {
-            return new Point(this.getUnitCoordinates().get("x") / blockSize, this.getUnitCoordinates().get("y") / blockSize);
-        } catch (NoSuchCoordinateKeyException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
+
 
     
 

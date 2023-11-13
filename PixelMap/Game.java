@@ -37,6 +37,7 @@ public class Game implements Runnable {
             double delta = updateLength / ((double)OPTIMAL_TIME);
     
             updateGame(); // Update the game state
+            GlobalUnits.cleanup();
     
             // Sleep for the remaining frame time
             try {
@@ -55,10 +56,14 @@ public class Game implements Runnable {
     private void updateGame() {
         // Update game logic here
         for(Unit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof Barbarian){
+            if(unit instanceof Barbarian && !((Barbarian)unit).isOutsideMap() && ((Barbarian)unit).getBarbarianLabel() != null ){
                 ((Barbarian)unit).move(); // This will update the position of the JLabel in each unit
+            } else {
+                if(unit instanceof Tanker && !((Tanker)unit).isOutsideMap() && ((Tanker)unit).getTankerLabel() != null ){
+                ((Tanker)unit).move(); // This will update the position of the JLabel in each unit
             }
         }
+    }
 
     }
 

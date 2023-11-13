@@ -20,6 +20,8 @@ public class GamePanel extends JPanel {
     private int currentWave;
     private int mobSpeed = 1;
     private int hordeSize = 4;
+    private int threashold = 10;
+    private int maxTanker = 2;
 
     private JLabel backgroundLabel;
 
@@ -68,27 +70,44 @@ public class GamePanel extends JPanel {
         waveInterval += 10;
         System.out.println("Spawning wave: " + currentWave);
         Random random = new Random();
-        int minTimer = 1000;
+        int minTimer = 800;
         int maxTimer = 2000;
         int randomTimer = minTimer + random.nextInt(maxTimer - minTimer + 1); 
+        
     
         new Timer().schedule(new TimerTask() {
             private int count = 0;
+            int tankerCount = 0;
     
             @Override
             public void run() {
                 if (count < hordeSize) {
-                    int minY = 550; // Minimum Y-coordinate
-                    int maxY = 650; // Maximum Y-coordinate
+                    int minY = 500; // Minimum Y-coordinate
+                    int maxY = 700; // Maximum Y-coordinate
                     int randomY = minY + random.nextInt(maxY - minY + 1); // Generate a random Y-coordinate within the range
+                    int minChance = 0;
+                    int maxChance = 10;
+                    int tankerApparitionChance = random.nextInt(maxChance - minChance + 1);
 
-                    new Barbarian(1, mobSpeed, 10, 1, 1, 1, new Coordinates(-10, randomY), GamePanel.this);
+                    new Barbarian(1, mobSpeed, 10, 1, 1, 1, new Coordinates(-400, randomY), GamePanel.this);
                     count++;
+
+                    if (tankerApparitionChance >= threashold && tankerCount <= maxTanker){
+                        new Tanker(1, 1, 10, 10, 1, 1, new Coordinates(-400, randomY), GamePanel.this);
+                        count += 2;
+                        tankerCount ++;
+                    }
+                    
                 } else {
                     this.cancel(); // Stop the timer once all mobs are spawned
                 }
             }
         }, 0, randomTimer); // random delay between each mob spawn
+        threashold --;
+        if (currentWave % 5 == 0){
+            mobSpeed ++;
+            maxTanker ++;
+        }
     }
     
 

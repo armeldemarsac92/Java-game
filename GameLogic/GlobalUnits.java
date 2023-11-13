@@ -1,35 +1,41 @@
 package GameLogic;
 
-import java.util.*;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GlobalUnits {
-    protected static List<Unit> units = new ArrayList<Unit>();
+    protected static List<Unit> units = new CopyOnWriteArrayList<>();
 
     public static boolean add(Unit unit) {
-        if(GlobalUnits.units.add(unit)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return units.add(unit);
     }
 
     public static boolean remove(Unit unit){
-        if(GlobalUnits.units.remove(unit)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return units.remove(unit);
     }
 
     public static void display() {
-        for (Unit unit : GlobalUnits.units) {
+        for (Unit unit : units) {
             System.out.println(unit.getId());
         }
     }
 
     public static List<Unit> getGlobalUnits(){
-        return GlobalUnits.units;
+        return units;
+    }
+
+    public static void cleanup() {
+        for (Unit unit : units) {
+            if (unit instanceof Barbarian && ((Barbarian)unit).isOutsideMap()){
+                units.remove(unit);
+                ((Barbarian)unit).cleanup();
+                // Perform any additional cleanup required for the unit
+            } else {
+                if (unit instanceof Tanker && ((Tanker)unit).isOutsideMap()){
+                units.remove(unit);
+                ((Tanker)unit).cleanup();
+                }
+            }
+        }
     }
 }

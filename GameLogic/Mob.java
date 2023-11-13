@@ -58,5 +58,17 @@ public abstract class Mob extends Unit{
         }
     }
 
+    public boolean isOutsideMap(){
+        try {
+            if (this.getUnitCoordinates().get("x")>2500){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (NoSuchCoordinateKeyException e) {
+            return false;
+        }
+    }
+
 
 }
