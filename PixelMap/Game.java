@@ -77,7 +77,7 @@ public class Game implements Runnable {
     // }
 
     private void updateGame() {
-        for(Unit unit : GlobalUnits.getGlobalUnits()){
+        for(AUnit unit : GlobalUnits.getGlobalUnits()){
             if(unit instanceof Mob){
                 ((Mob)unit).move();
             }

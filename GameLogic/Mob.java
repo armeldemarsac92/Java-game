@@ -2,10 +2,11 @@ package GameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import Exceptions.NoSuchCoordinateKeyException;
 
-public abstract class Mob extends Unit{
+public abstract class Mob extends AUnit{
 
     /*---------- Attributes ---------- */
 
@@ -80,10 +81,10 @@ public abstract class Mob extends Unit{
     @Override 
     public void computeUnitsInRange(){
         // initialize empty list (serves as setter)
-        List<Unit> unitsInRangeTemp = new ArrayList<Unit>();
+        List<AUnit> unitsInRangeTemp = new ArrayList<AUnit>();
         
         // For each unit in global list
-        for(Unit unit : GlobalUnits.getGlobalUnits()){
+        for(AUnit unit : GlobalUnits.getGlobalUnits()){
             if(unit instanceof Tower){
                 try {
                     // get the absolute distance in x
@@ -117,11 +118,49 @@ public abstract class Mob extends Unit{
         this.setUnitsInRange(unitsInRangeTemp);
     }
 
+    @Override
+    public void attackUnitsInRange(){
+
+        if(this.unitsInRange.size() > 0){
+            try {
+                // delay the action
+                TimeUnit.SECONDS.sleep(this.damageRate);
+                // attack each unit in range if it has enough capacity
+                for(int i = 0; i < this.unitsInRange.size(); i++){
+                    Castle unitToAttack = (Castle) this.unitsInRange.get(i);
+                    if(i <= this.capacity){
+                        System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
+                        + unitToAttack.getClass().getSimpleName() + "(" + unitToAttack.getHp() + " hp left)");
+                        this.attack(unitToAttack);
+                    }
+                }
+            } catch(InterruptedException e){
+                System.out.println(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+        }
+        else{
+            System.out.println("No unit in range");
+        }
+    }
+
     public void killInstance(){
         System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
         GlobalUnits.remove(this);
         CoinSystem.earnCoins(this.coinValue);
     }   
+
+    @Override 
+    public <T> void attack(T unit){
+        Castle castedUnit = (Castle) unit;
+
+        if(castedUnit.isUp()){
+            castedUnit.setHp(this.damage);
+        }
+        else{
+            castedUnit.gameOver();
+        }
+    }
 
 
 }

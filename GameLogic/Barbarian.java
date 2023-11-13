@@ -70,4 +70,17 @@ public class Barbarian extends Mob {
         }
     }
 
+    @Override
+    public <T> void attack(T unit) {
+        Mob castedUnit = (Mob) unit;
+        if(castedUnit.isAlive()){
+            castedUnit.setHp(this.damage);
+        }
+        else{
+            castedUnit.killInstance();
+        }
+    }
+
+    
+
 }

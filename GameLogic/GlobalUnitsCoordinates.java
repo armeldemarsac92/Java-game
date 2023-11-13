@@ -17,7 +17,7 @@ public class GlobalUnitsCoordinates {
         GlobalUnitsCoordinates.globalUnitsCoordinates.put(unitId, coordinatesXY);
     }
 
-    public static void remove(Unit unit, Coordinates coordinates){
+    public static void remove(AUnit unit, Coordinates coordinates){
         GlobalUnitsCoordinates.globalUnitsCoordinates.remove(unit, coordinates);
     }
 }

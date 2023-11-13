@@ -10,16 +10,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-public class Tower extends Unit {
+public abstract class Tower extends AUnit {
 
     /*---------- Attributes ---------- */
 
     private int price;
     private int level = 0;
+    private int maxLevel = 2;
+
 
     /*---------- Constructor ---------- */
-    public Tower(Coordinates coordinates){
-        super(10, 1, 100, 1, coordinates);
+    
+    public Tower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
+        super(damage, damageRate, range, capacity, coordinates);
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
         } catch (IOException e) {
@@ -85,7 +88,7 @@ public class Tower extends Unit {
     
     public void upgrade() throws MaximumLevelReachedException{
         System.out.println(this.level);
-        if(this.level >= 2){
+        if(this.level >= this.maxLevel){
             throw new MaximumLevelReachedException("Maximim level reached " + "(" + this.level + ")");
         }
         else{
@@ -108,10 +111,10 @@ public class Tower extends Unit {
     @Override 
     public void computeUnitsInRange(){
         // initialize empty list (serves as setter)
-        List<Unit> unitsInRangeTemp = new ArrayList<Unit>();
+        List<AUnit> unitsInRangeTemp = new ArrayList<AUnit>();
         
         // For each unit in global list
-        for(Unit unit : GlobalUnits.getGlobalUnits()){
+        for(AUnit unit : GlobalUnits.getGlobalUnits()){
             if(unit instanceof Mob){
                 try {
                     // get the absolute distance in x
@@ -149,7 +152,6 @@ public class Tower extends Unit {
 
     @Override
     public void attackUnitsInRange(){
-
         if(this.unitsInRange.size() > 0){
             try {
                 // delay the action
@@ -176,5 +178,10 @@ public class Tower extends Unit {
         else{
             System.out.println("No unit in range");
         }
+    }
+
+    @Override 
+    public <T> void attack(T unit){
+
     }
 }

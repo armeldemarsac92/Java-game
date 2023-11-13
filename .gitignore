@@ -2,3 +2,4 @@ GameLogic/*.class
 Test/*.class
 Exceptions/*.class
 GraphicInterface/*.class
+PixelMap/*.class

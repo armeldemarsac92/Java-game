@@ -3,9 +3,9 @@ package GameLogic;
 import java.util.*;
 
 public class GlobalUnits {
-    protected static List<Unit> units = new ArrayList<Unit>();
+    protected static List<AUnit> units = new ArrayList<AUnit>();
 
-    public static boolean add(Unit unit) {
+    public static boolean add(AUnit unit) {
         if(GlobalUnits.units.add(unit)){
             return true;
         }
@@ -14,7 +14,7 @@ public class GlobalUnits {
         }
     }
 
-    public static boolean remove(Unit unit){
+    public static boolean remove(AUnit unit){
         if(GlobalUnits.units.remove(unit)){
             return true;
         }
@@ -24,12 +24,12 @@ public class GlobalUnits {
     }
 
     public static void display() {
-        for (Unit unit : GlobalUnits.units) {
+        for (AUnit unit : GlobalUnits.units) {
             System.out.println(unit.getId());
         }
     }
 
-    public static List<Unit> getGlobalUnits(){
+    public static List<AUnit> getGlobalUnits(){
         return GlobalUnits.units;
     }
 }

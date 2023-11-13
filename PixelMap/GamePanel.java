@@ -27,13 +27,13 @@ public class GamePanel extends JPanel {
             backgroundImage = ImageIO.read(new File("assets/background.png"));
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the error here - perhaps set a default background color instead
         }
-        this.towers.add(new Tower(new Coordinates(400, 400)));
-        this.towers.add(new Tower(new Coordinates(1100, 400)));
-        this.towers.add(new Tower(new Coordinates(1800, 400)));
-        this.towers.add(new Tower(new Coordinates(1500, 800)));
-        this.towers.add(new Tower(new Coordinates(750, 800)));
+        
+        this.towers.add(new ArcherTower(new Coordinates(400, 400)));
+        this.towers.add(new ArcherTower(new Coordinates(1100, 400)));
+        this.towers.add(new ArcherTower(new Coordinates(1800, 400)));
+        this.towers.add(new ArcherTower(new Coordinates(1500, 800)));
+        this.towers.add(new ArcherTower(new Coordinates(750, 800)));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class GamePanel extends JPanel {
             tower.draw(g, GRID_CELL_SIZE);
         }
 
-        for(Unit unit : GlobalUnits.getGlobalUnits()){
+        for(AUnit unit : GlobalUnits.getGlobalUnits()){
             if(unit instanceof Barbarian){
                 ((Barbarian)unit).draw(g, GRID_CELL_SIZE);
                     System.out.println("barbarian drawn");

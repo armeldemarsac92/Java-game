@@ -3,7 +3,7 @@ package GameLogic;
 import java.util.List;
 import java.awt.*;
 
-public interface GameObject {
+public interface IGameObject {
     public int getDamage();
     public int getDamageRate();
     public int getCapacity();
@@ -14,10 +14,11 @@ public interface GameObject {
 
     public Coordinates getUnitCoordinates();
     
-    public List <Unit> getUnitsInRange();
+    public List <AUnit> getUnitsInRange();
 
     public void setCoordinates(Coordinates coordinates);
-    public void setUnitsInRange(List<Unit> unitsInRange);
+    public void setUnitsInRange(List<AUnit> unitsInRange);
     public void computeUnitsInRange();
     public void attackUnitsInRange();
+    public <T> void attack(T unit);
 }
