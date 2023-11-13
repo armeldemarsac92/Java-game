@@ -1,21 +1,13 @@
 package GameLogic;
-import java.util.List;
 
 import javax.imageio.ImageIO;
-
-import Exceptions.NoSuchCoordinateKeyException;
-
-import java.util.ArrayList;
 import java.awt.*;
 import java.io.IOException;
 
 public class Barbarian extends Mob {
-    private List<Image> frames = new ArrayList<>();
-    private int currentFrame = 0;
-
 
     public Barbarian(Coordinates coordinates) {
-        super(2, 50, 2, 1, 1, 1, 5, coordinates);
+        super(50.0f, 50, 2, 1, 1, 1, 5, coordinates);
         try {
             for (int i = 1; i <= 7; i++) {
                 Image frame = ImageIO.read(getClass().getResource("/assets/barbarian/barbarian-" + i + ".png"));
@@ -36,6 +28,7 @@ public class Barbarian extends Mob {
         System.out.println("Coordinates: " + this.getUnitCoordinates().getCoordinates());
     }
 
+    @Override
     public void updateAnimation() {
         currentFrame = (currentFrame + 1) % frames.size();
     }
@@ -57,30 +50,5 @@ public class Barbarian extends Mob {
     
         // Draw the image such that its bottom is aligned with the bottom of the grid cell
         graphics.drawImage(currentFrameImage, drawX, drawY, width, height, null);
-    }
-
-    @Override
-    public void move(){
-        try {
-            this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + this.getSpeed());
-            System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
-            this.updateAnimation();
-        } catch (NoSuchCoordinateKeyException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    @Override
-    public <T> void attack(T unit) {
-        Mob castedUnit = (Mob) unit;
-        if(castedUnit.isAlive()){
-            castedUnit.setHp(this.damage);
-        }
-        else{
-            castedUnit.killInstance();
-        }
-    }
-
-    
-
+    }    
 }

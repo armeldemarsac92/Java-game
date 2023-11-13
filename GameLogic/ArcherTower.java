@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class ArcherTower extends Tower{ // archer tower just shoots at enemies
+public class ArcherTower extends ATower{ // archer tower just shoots at enemies
     public ArcherTower(Coordinates coordinates){
-        super(5, 1, 150, 1, coordinates);
+        super(10, 1, 150, 1, coordinates);
         
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));

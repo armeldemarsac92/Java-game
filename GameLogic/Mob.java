@@ -1,5 +1,6 @@
 package GameLogic;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -10,15 +11,17 @@ public abstract class Mob extends AUnit{
 
     /*---------- Attributes ---------- */
 
-    protected int speed;
+    protected float speed;
     protected int hp;
     protected int coinValue;
     protected String deathSoundFilePath;
     private boolean alive = true;
+    protected List<Image> frames = new ArrayList<>();
+    protected int currentFrame = 0;
 
 
     /*---------- Constructor ---------- */
-    public Mob(int speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates){
+    public Mob(float speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates){
         
         super(damage, damageRate, range, capacity, coordinates);
         this.hp = hp;
@@ -29,7 +32,7 @@ public abstract class Mob extends AUnit{
 
     /*---------- Getters ---------- */
     
-    public int getSpeed(){
+    public float getSpeed(){
         return this.speed;
     }
 
@@ -67,11 +70,17 @@ public abstract class Mob extends AUnit{
         this.alive = alive;
     }
 
+    public void setSpeed(float speed){
+        this.speed = speed;
+    }
+
 
     /*---------- Methods ---------- */
+    public abstract void updateAnimation();
+
     public void move(){
         try {
-            this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + this.getSpeed());
+            this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + (int) this.getSpeed());
             System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
         } catch (NoSuchCoordinateKeyException e) {
             System.out.println(e.getMessage());
@@ -85,7 +94,7 @@ public abstract class Mob extends AUnit{
         
         // For each unit in global list
         for(AUnit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof Tower){
+            if(unit instanceof ATower){
                 try {
                     // get the absolute distance in x
                     int unitXPos = unit.getUnitCoordinates().get("x");

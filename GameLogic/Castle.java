@@ -139,6 +139,7 @@ public class Castle extends AUnit{
     @Override
     public <T> void attack(T unit) {
         Mob castedUnit = (Mob) unit;
+        
         if(castedUnit.isAlive()){
             castedUnit.setHp(this.damage);
         }

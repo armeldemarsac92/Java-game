@@ -114,8 +114,8 @@ public abstract class AUnit implements IGameObject {
 
     /*---------- Methods ---------- */
     public abstract void attackUnitsInRange();
-
     public abstract void computeUnitsInRange();
+
 
     public Point getBlockCoordinates(int blockSize){
         try {

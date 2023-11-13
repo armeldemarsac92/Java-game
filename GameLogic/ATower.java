@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-public abstract class Tower extends AUnit {
+public abstract class ATower extends AUnit {
 
     /*---------- Attributes ---------- */
 
@@ -20,8 +20,8 @@ public abstract class Tower extends AUnit {
 
 
     /*---------- Constructor ---------- */
-    
-    public Tower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
+
+    public ATower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
         super(damage, damageRate, range, capacity, coordinates);
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
@@ -160,13 +160,8 @@ public abstract class Tower extends AUnit {
                 for(int i = 0; i < this.unitsInRange.size(); i++){
                     Mob unitToAttack = (Mob) this.unitsInRange.get(i);
                     if(i <= this.capacity){
-                        System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
-                        + unitToAttack.getClass().getSimpleName() + "(" + unitToAttack.getHp() + " hp left)");
                         if(unitToAttack.isAlive()){
-                            unitToAttack.setHp(this.getDamage());
-                        }
-                        else{
-                            unitToAttack.killInstance();
+                            this.attack(unitToAttack);
                         }
                     }
                 }
@@ -182,6 +177,15 @@ public abstract class Tower extends AUnit {
 
     @Override 
     public <T> void attack(T unit){
-
+        Mob castedUnit = (Mob) unit;
+        
+        if(castedUnit.isAlive()){
+            castedUnit.setHp(this.getDamage());
+            System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
+                + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left)");
+        }
+        else{
+            castedUnit.killInstance();
+        }
     }
 }

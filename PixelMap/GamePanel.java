@@ -17,7 +17,7 @@ public class GamePanel extends JPanel {
     private static final int MAP_WIDTH = 3840;
     private static final int MAP_HEIGHT = 2160;
     private Image backgroundImage;
-    private List<Tower> towers = new ArrayList<Tower>();
+    private List<ATower> towers = new ArrayList<ATower>();
 
     public GamePanel() {
         // Set the size of the panel to match the map
@@ -55,7 +55,7 @@ public class GamePanel extends JPanel {
         // }
 
 
-        for (Tower tower : towers) {
+        for (ATower tower : towers) {
             tower.draw(g, GRID_CELL_SIZE);
         }
 

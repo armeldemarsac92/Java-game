@@ -6,7 +6,8 @@ import GameLogic.*;
 public class GameLogicTest {
     
     public static void main(String[] args) throws NoSuchCoordinateKeyException, MaximumLevelReachedException{
-        Tower tower = new ArcherTower(new Coordinates(2, 2));
+        ATower tower = new ArcherTower(new Coordinates(2, 2));
+        ATower lavaTower = new IceTower(new Coordinates(5, 5));
         Barbarian barbarian = new Barbarian(new Coordinates(0, 4));
         Barbarian secondBarbarian = new Barbarian(new Coordinates(1000, 1500));
         Tanker tanker = new Tanker(new Coordinates(1, 21));
@@ -20,17 +21,13 @@ public class GameLogicTest {
         for(AUnit unit : tower.getUnitsInRange()){
             System.out.println("Unit in range: " + unit.getClass().getSimpleName());
         }
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
-        // tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
+        tower.attackUnitsInRange();
 
         System.out.println("Unit count: " + GlobalUnits.getGlobalUnits().size());
 
