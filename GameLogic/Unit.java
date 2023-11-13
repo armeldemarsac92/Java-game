@@ -49,6 +49,7 @@ public abstract class Unit implements GameObject {
         this.damageRate = damageRate;
         this.capacity = capacity;
         this.coordinates = coordinates;
+        this.range = range;
         GlobalUnits.add(this);
         GlobalUnitsCoordinates.add(this.getId(), unitCoordinates);
     }

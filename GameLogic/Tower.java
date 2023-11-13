@@ -93,7 +93,9 @@ public class Tower extends Unit {
             this.setDamage(this.getDamage() * 2); // increase damage
             // this.setCharacterSpriteFilePath("Sprite level " + this.level); // change sprite
             // this.setAttackSoundFilePath("Attack level " + this.level); // change sound
-            this.setDamageRate(this.getDamageRate() * 2); // increase damage rate
+            this.setDamageRate(this.getDamageRate() * 2); // double damage rate
+            this.setPrice(this.price * 2); // double tower price
+            CoinSystem.spendCoins(this.price);
             try {
                 this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl1.png"));
             } catch (IOException e) {
@@ -125,13 +127,15 @@ public class Tower extends Unit {
                     // get the hypothenus between the two
                     double hypothenus = Math.hypot(distanceX, distanceY);
 
-                    System.out.println("Distance x between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceX);
-                    System.out.println("Distance y between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + distanceY);
                     System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
 
                     // if the unit range >= distance between the two, push to temp list
-                    if((double) this.range <= hypothenus){
+                    if((double) this.range >= hypothenus && unit instanceof Mob){
                         unitsInRangeTemp.add((Mob) unit);
+                        System.out.println("Unit " + unit.getClass().getSimpleName() + " is therefore in range (" + this.range + " - " + hypothenus + ")");
+                    }
+                    else{
+                        System.out.println(unit.getClass().getSimpleName() + " not in range" + "(" + this.range + " - " + hypothenus + ")" );
                     }
                 } catch(NoSuchCoordinateKeyException e){
                     e.printStackTrace();
@@ -145,15 +149,8 @@ public class Tower extends Unit {
 
     @Override
     public void attackUnitsInRange(){
-        List<Mob> attackableUnits = new ArrayList<Mob>();
 
-        for(Unit unit : this.unitsInRange){
-            if(unit instanceof Mob){
-                attackableUnits.add((Mob) unit);
-            }
-        }
-
-        if(attackableUnits.size() > 0){
+        if(this.unitsInRange.size() > 0){
             try {
                 // delay the action
                 TimeUnit.SECONDS.sleep(this.damageRate);
