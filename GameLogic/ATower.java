@@ -1,6 +1,7 @@
 package GameLogic;
 
 import Exceptions.*;
+import PixelMap.GamePanel;
 import java.awt.*;
 import java.io.File;
 import javax.imageio.ImageIO;
@@ -21,8 +22,8 @@ public abstract class ATower extends AUnit {
 
     /*---------- Constructor ---------- */
 
-    public ATower(int damage, int damageRate, int range, int capacity, Coordinates coordinates){
-        super(damage, damageRate, range, capacity, coordinates);
+    public ATower(int damage, int damageRate, int range, int capacity, Coordinates coordinates, GamePanel gamePanel){
+        super(damage, damageRate, range, capacity, coordinates, gamePanel);
         try {
             this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl0.png"));
         } catch (IOException e) {

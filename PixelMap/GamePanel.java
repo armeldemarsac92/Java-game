@@ -83,11 +83,11 @@ public class GamePanel extends JPanel {
                     int maxChance = 10;
                     int tankerApparitionChance = random.nextInt(maxChance - minChance + 1);
 
-                    new Barbarian(new Coordinates(-400, randomY));
+                    new Barbarian(new Coordinates(-400, randomY), GamePanel.this);
                     count++;
 
                     if (tankerApparitionChance >= threashold && tankerCount <= maxTanker){
-                        new Tanker(new Coordinates(-400, randomY));
+                        new Tanker(new Coordinates(-400, randomY), GamePanel.this);
                         count += 2;
                         tankerCount ++;
                     }

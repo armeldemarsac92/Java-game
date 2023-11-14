@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import Exceptions.NoSuchCoordinateKeyException;
+import PixelMap.GamePanel;
 
 public class Castle extends AUnit{
 
@@ -18,8 +19,8 @@ public class Castle extends AUnit{
 
     /*---------- Constructor ---------- */
 
-    public Castle(){
-        super(20, 1, 100, 2, new Coordinates(1, 1));
+    public Castle(GamePanel gamePanel){
+        super(20, 1, 100, 2, new Coordinates(1, 1), gamePanel);
 
         System.out.println("----------- Castle instantiated -----------");
         System.out.println("Hp :" + this.getHp());

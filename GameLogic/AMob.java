@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import PixelMap.GamePanel;
 
 import Exceptions.NoSuchCoordinateKeyException;
 
@@ -21,8 +22,8 @@ public abstract class AMob extends AUnit{
 
 
     /*---------- Constructor ---------- */
-    public AMob(float speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates){
-        super(damage, damageRate, range, capacity, coordinates);
+    public AMob(float speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates, GamePanel gamePanel){
+        super(damage, damageRate, range, capacity, coordinates, gamePanel);
         this.hp = hp;
         this.speed = speed;
         this.coinValue = coinValue;

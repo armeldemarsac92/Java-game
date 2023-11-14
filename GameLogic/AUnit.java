@@ -34,7 +34,6 @@ public abstract class AUnit implements IGameObject {
     protected Coordinates coordinates;
 
     protected Container parentContainer;
-    private GamePanel gamePanel;
     private JLabel unitLabel;
     private Timer animationTimer;
     private List<ImageIcon> animationFrames;
@@ -48,7 +47,7 @@ public abstract class AUnit implements IGameObject {
 
     /*---------- Constructor ---------- */
     
-    public AUnit(int damage, int damageRate, int range, int capacity, Coordinates coordinate){
+    public AUnit(int damage, int damageRate, int range, int capacity, Coordinates coordinate, GamePanel gamePanel){
         List<Integer> unitCoordinates = new ArrayList<Integer>();
         this.parentContainer = gamePanel.getInstance();
         try {
