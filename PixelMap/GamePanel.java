@@ -105,7 +105,7 @@ public class GamePanel extends JPanel {
     }
 
     public GamePanel getInstance(){
-        return GamePanel.this;
+        return this;
     }
     
 
