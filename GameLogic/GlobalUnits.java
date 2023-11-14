@@ -30,15 +30,12 @@ public class GlobalUnits {
 
     public static void cleanup() {
         for (AUnit unit : units) {
-            if (unit instanceof Barbarian && ((Barbarian)unit).isOutsideMap()){
+            if (unit instanceof AMob && ((AMob)unit).isOutsideMap()){
+                // System.out.println("unit cleaned" + " " + unit.getId());
                 units.remove(unit);
-                ((Barbarian)unit).cleanup();
+                unit.cleanup();
+                // System.out.println(units);
                 // Perform any additional cleanup required for the unit
-            } else {
-                if (unit instanceof Tanker && ((Tanker)unit).isOutsideMap()){
-                units.remove(unit);
-                ((Tanker)unit).cleanup();
-                }
             }
         }
     }

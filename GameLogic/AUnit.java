@@ -44,6 +44,7 @@ public abstract class AUnit implements IGameObject, MouseListener {
     private List<ImageIcon> animationFrames;
     private int currentFrame = 0;
     private String coreFilePath;
+    private int numberOfFrames;
 
 
     private int sizeX;
@@ -79,33 +80,41 @@ public abstract class AUnit implements IGameObject, MouseListener {
 
         GlobalUnits.add(this);
         GlobalUnitsCoordinates.add(this.getId(), unitCoordinates);
-        System.out.println(this.getClass().getSimpleName());
+        // System.out.println(this.getClass().getSimpleName());
 
 
         if(this.getClass().getSimpleName().equals("Tanker") ){
             this.coreFilePath = "assets/tanker/Tanker-";
             this.sizeX = 100;
             this.sizeY = 100;
+            this.numberOfFrames = 7;
         }
         else if (this.getClass().getSimpleName().equals("Barbarian") ){
-            this.sizeX = 300;
-            this.sizeY = 300;
+            this.sizeX = 100;
+            this.sizeY = 100;
             this.coreFilePath = "assets/barbarian/Barbarian-";
+            this.numberOfFrames = 7;
+
         }
         else if(this.getClass().getSimpleName().equals("IceTower") ){
-            this.sizeX = 300;
-            this.sizeY = 300;
+            this.sizeX = 200;
+            this.sizeY = 200;
             this.coreFilePath = "assets/ice_tower/level_0/IceTower-";
+            this.numberOfFrames = 32;
+
         }
         else if(this.getClass().getSimpleName().equals("ArcherTower") ) {
-            this.coreFilePath = "assets/archer_tower/level_0/ArcherTower-";
-            this.sizeX = 300;
-            this.sizeY = 300;
+            this.coreFilePath = "assets/archer_tower/level_0/Tower-";
+            this.sizeX = 200;
+            this.sizeY = 200;
+            this.numberOfFrames = 32;
         }
         else if(this.getClass().getSimpleName().equals("Castle")){
             this.coreFilePath = "assets/castle/level_0/Castle-";
-            this.sizeX = 300;
-            this.sizeY = 300;
+            this.sizeX = 200;
+            this.sizeY = 200;
+            this.numberOfFrames = 32;
+
         } else {
             System.out.println("yop");
         }
@@ -155,9 +164,9 @@ public abstract class AUnit implements IGameObject, MouseListener {
         animationFrames = new ArrayList<>();
 
         try {
-            for (int i = 1; i <= 7; i++) { 
+            for (int i = 1; i <= this.numberOfFrames; i++) { 
                 Image img = ImageIO.read(new File(this.coreFilePath + i + ".png"));
-                Image scaledImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); 
+                Image scaledImg = img.getScaledInstance(this.sizeX, this.sizeY, Image.SCALE_SMOOTH); 
                 this.animationFrames.add(new ImageIcon(scaledImg));
             }
         } catch (IOException e) {
@@ -184,6 +193,7 @@ public abstract class AUnit implements IGameObject, MouseListener {
             this.animationTimer.stop();
         }
         if (this.unitLabel.getParent() != null) {
+            // System.out.println("sprite removed");
             this.unitLabel.getParent().remove(this.unitLabel);
         }
     }
