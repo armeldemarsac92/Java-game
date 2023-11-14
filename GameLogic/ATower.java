@@ -87,26 +87,32 @@ public abstract class ATower extends AUnit {
 
     /*---------- Methods ---------- */
     
-    public void upgrade() throws MaximumLevelReachedException{
+    public void upgrade() throws MaximumLevelReachedException {
         System.out.println(this.level);
-        if(this.level >= this.maxLevel){
-            throw new MaximumLevelReachedException("Maximim level reached " + "(" + this.level + ")");
-        }
-        else{
-            this.setLevel(this.level + 1); //upgrade level
-            this.setDamage(this.getDamage() * 2); // increase damage
-            this.setDamageRate(this.getDamageRate() * 2); // double damage rate
-            this.setPrice(this.price * 2); // double tower price
+        if (this.level >= this.maxLevel) {
+            throw new MaximumLevelReachedException("Maximum level reached (" + this.level + ")");
+        } else {
+            this.setLevel(this.level + 1); // Upgrade level
+            this.setDamage(this.getDamage() * 2); // Increase damage
+            this.setDamageRate(this.getDamageRate() * 2); // Double damage rate
+            this.setPrice(this.price * 2); // Double tower price
             CoinSystem.spendCoins(this.price);
-
-            if(this instanceof IceTower){
+    
+            // Update core file path based on the type of tower and its new level
+            if (this instanceof IceTower) {
+                this.sizeX = 400;
                 this.setCoreFilePath("assets/ice_tower/level_" + this.level + "/Tower-");
-            }
-            else if(this instanceof ArcherTower){
+            } else if (this instanceof ArcherTower) {
                 this.setCoreFilePath("assets/archer_tower/level_" + this.level + "/Tower-");
             }
+    
+            // Reload animation frames with the new assets
+            this.reloadAnimationFramesAsync();
         }
     }
+    
+    
+    
 
     @Override 
     public void computeUnitsInRange(){

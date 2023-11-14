@@ -8,6 +8,7 @@ import PixelMap.GamePanel;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingWorker;
 
 import Exceptions.MaximumLevelReachedException;
 import Exceptions.NoSuchCoordinateKeyException;
@@ -47,8 +48,8 @@ public abstract class AUnit implements IGameObject, MouseListener {
     private int numberOfFrames;
 
 
-    private int sizeX;
-    private int sizeY;
+    protected int sizeX;
+    protected int sizeY;
 
 
     /*---------- Constructor ---------- */
@@ -136,6 +137,12 @@ public abstract class AUnit implements IGameObject, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         System.out.println("Mouse clicked on coordinates " + e.getX() + ";" + e.getY() + " , type: " + this.getClass().getSimpleName());
+        try {
+            ((ATower)this).upgrade();
+        } catch (MaximumLevelReachedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
     }
     
     @Override
@@ -160,7 +167,7 @@ public abstract class AUnit implements IGameObject, MouseListener {
     }
 
 
-    private void loadAnimationFrames() {
+    protected void loadAnimationFrames() {
         animationFrames = new ArrayList<>();
 
         try {
@@ -173,20 +180,64 @@ public abstract class AUnit implements IGameObject, MouseListener {
             e.printStackTrace();
         }
     }
+    
+    protected void reloadAnimationFramesAsync() {
+        new SwingWorker<List<ImageIcon>, Void>() {
+            @Override
+            protected List<ImageIcon> doInBackground() throws Exception {
+                List<ImageIcon> newFrames = new ArrayList<>();
+                loadAnimationFrames();
+                // Load new frames (similar to loadAnimationFrames method)
+                // Ensure this does not modify any Swing components directly
+                return newFrames;
+            }
+    
+            @Override
+            protected void done() {
+                try {
+                    // Update animation frames on the EDT
+                    List<ImageIcon> newFrames = get();
+                    updateAnimationFrames(newFrames);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+    
+    private void updateAnimationFrames(List<ImageIcon> newFrames) {
+        // Stop current animation if running
+        if (this.animationTimer != null) {
+            this.animationTimer.stop();
+        }
+    
+        // Update frames
+        this.animationFrames = newFrames;
+    
+        // Reset animation state
+        this.currentFrame = 0;
+    
+        // Restart animation
+        startAnimation();
+    }
+    
 
     public JLabel getUnitLabel(){
         return this.unitLabel;
     }
 
-    private void startAnimation() {
+    protected void startAnimation() {
         this.animationTimer = new Timer(50, e -> updateAnimation());
         this.animationTimer.start();
     }
 
     public void updateAnimation() {
-        this.currentFrame = (this.currentFrame + 1) % animationFrames.size();
-        this.unitLabel.setIcon(animationFrames.get(this.currentFrame));
+        if (!animationFrames.isEmpty()) {
+            this.currentFrame = (this.currentFrame + 1) % animationFrames.size();
+            this.unitLabel.setIcon(animationFrames.get(this.currentFrame));
+        }
     }
+    
 
     public void cleanup() {
         if (this.animationTimer != null) {
