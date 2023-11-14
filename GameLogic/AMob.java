@@ -83,7 +83,7 @@ public abstract class AMob extends AUnit{
             Coordinates coords = getUnitCoordinates();
             coords.setXPos(coords.get("x") + (int) getSpeed());
             this.getUnitLabel().setLocation(coords.get("x"), coords.get("y"));
-            System.out.println("Pos on x: " + coords.get("x")); // Debug
+            // System.out.println("Pos on x: " + coords.get("x")); // Debug
         } catch (NoSuchCoordinateKeyException e) {
             System.out.println("no coordinates");
             e.printStackTrace(); // Consider more meaningful exception handling

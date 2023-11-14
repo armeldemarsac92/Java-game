@@ -56,12 +56,8 @@ public class Game implements Runnable {
     private void updateGame() {
         // Update game logic here
         for(AUnit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof Barbarian && !((AMob)unit).isOutsideMap() && unit.getUnitLabel() != null ){
+            if(unit instanceof AMob && unit.getUnitLabel() != null ){
                 ((AMob)unit).move(); // This will update the position of the JLabel in each unit
-            } else {
-                if(unit instanceof Tanker && !((Tanker)unit).isOutsideMap() && unit.getUnitLabel() != null ){
-                ((Tanker)unit).move(); // This will update the position of the JLabel in each unit
-            }
         }
     }
 

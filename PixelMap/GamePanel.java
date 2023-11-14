@@ -49,6 +49,12 @@ public class GamePanel extends JPanel {
     }
 
     private void initializeUnits() {
+        new ArcherTower(new Coordinates(350, 250), GamePanel.this);
+        new ArcherTower(new Coordinates(850, 250), GamePanel.this);
+        new ArcherTower(new Coordinates(1350, 250), GamePanel.this);
+        new ArcherTower(new Coordinates(1850, 750), GamePanel.this);
+        new ArcherTower(new Coordinates(550, 750), GamePanel.this);
+
         waveTimer = new Timer();
         waveTimer.schedule(new TimerTask() {
             @Override
