@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
             public void run() {
                 if (count < hordeSize) {
                     int minY = 500; // Minimum Y-coordinate
-                    int maxY = 700; // Maximum Y-coordinate
+                    int maxY = 630; // Maximum Y-coordinate
                     int randomY = minY + random.nextInt(maxY - minY + 1); // Generate a random Y-coordinate within the range
                     int minChance = 0;
                     int maxChance = 10;

@@ -47,9 +47,19 @@ public abstract class AUnit implements IGameObject {
 
     /*---------- Constructor ---------- */
     
-    public AUnit(int damage, int damageRate, int range, int capacity, Coordinates coordinate, GamePanel gamePanel){
+    public AUnit(int damage, int damageRate, int range, int capacity, Coordinates coordinates, GamePanel gamePanel){
         List<Integer> unitCoordinates = new ArrayList<Integer>();
-        this.parentContainer = gamePanel.getInstance();
+        this.parentContainer = gamePanel;
+        AUnit.counter++;
+        this.id = AUnit.counter;
+        this.damage = damage;
+        this.damageRate = damageRate;
+        this.capacity = capacity;
+        this.range = range;
+        this.unitLabel = new JLabel();
+        this.coordinates = coordinates;
+        
+
         try {
             unitCoordinates.add(coordinates.get("x"));
             unitCoordinates.add(coordinates.get("y"));
@@ -57,40 +67,39 @@ public abstract class AUnit implements IGameObject {
             System.out.println(e.getMessage());
         }
 
-        AUnit.counter++;
-        this.id = AUnit.counter;
-        this.damage = damage;
-        this.damageRate = damageRate;
-        this.capacity = capacity;
-        this.coordinates = coordinates;
-        this.range = range;
-        this.unitLabel = new JLabel();
+        
+
         GlobalUnits.add(this);
         GlobalUnitsCoordinates.add(this.getId(), unitCoordinates);
+        System.out.println(this.getClass().getSimpleName());
 
-        if(this.getClass().getSimpleName() == "Tanker" || this.getClass().getSimpleName() == "Barbarian"){
+
+        if(this.getClass().getSimpleName().equals("Tanker") ){
+            this.coreFilePath = "assets/tanker/Tanker-";
             this.sizeX = 100;
             this.sizeY = 100;
-            if(this.getClass().getSimpleName() == "Tanker"){
-                this.coreFilePath = "assets/tanker/Tanker-";
-
-            }
-            else{
-                this.coreFilePath = "assets/barbarian/Barbarian-";
-            }
         }
-        else if(this.getClass().getSimpleName() == "IceTower" || this.getClass().getSimpleName() == "ArcherTower" || this.getClass().getSimpleName() == "Castle"){
+        else if (this.getClass().getSimpleName().equals("Barbarian") ){
             this.sizeX = 300;
             this.sizeY = 300;
-            if(this.getClass().getSimpleName() == "IceTower"){
-                this.coreFilePath = "assets/ice_tower/level_0/IceTower-";
-            }
-            else if(this.getClass().getSimpleName() == "ArcherTower"){
-                this.coreFilePath = "assets/archer_tower/level_0/ArcherTower-";
-            }
-            else if(this.getClass().getSimpleName() == "Castle"){
-                this.coreFilePath = "assets/castle/level_0/Castle-";
-            }
+            this.coreFilePath = "assets/barbarian/Barbarian-";
+        }
+        else if(this.getClass().getSimpleName().equals("IceTower") ){
+            this.sizeX = 300;
+            this.sizeY = 300;
+            this.coreFilePath = "assets/ice_tower/level_0/IceTower-";
+        }
+        else if(this.getClass().getSimpleName().equals("ArcherTower") ) {
+            this.coreFilePath = "assets/archer_tower/level_0/ArcherTower-";
+            this.sizeX = 300;
+            this.sizeY = 300;
+        }
+        else if(this.getClass().getSimpleName().equals("Castle")){
+            this.coreFilePath = "assets/castle/level_0/Castle-";
+            this.sizeX = 300;
+            this.sizeY = 300;
+        } else {
+            System.out.println("yop");
         }
 
 
@@ -101,7 +110,7 @@ public abstract class AUnit implements IGameObject {
         }
 
         parentContainer.add(this.unitLabel);
-        parentContainer.setComponentZOrder(this.unitLabel, GlobalUnits.getIndex(this) * (-1));
+        parentContainer.setComponentZOrder(this.unitLabel, Math.abs(GlobalUnits.getIndex(this) * (-1)));
 
         this.loadAnimationFrames();
         this.startAnimation();
@@ -111,9 +120,9 @@ public abstract class AUnit implements IGameObject {
         animationFrames = new ArrayList<>();
 
         try {
-            for (int i = 1; i <= 7; i++) { // numberOfFrames should be the number of images in your sequence
+            for (int i = 1; i <= 7; i++) { 
                 Image img = ImageIO.read(new File(this.coreFilePath + i + ".png"));
-                Image scaledImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Scale image
+                Image scaledImg = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH); 
                 this.animationFrames.add(new ImageIcon(scaledImg));
             }
         } catch (IOException e) {
