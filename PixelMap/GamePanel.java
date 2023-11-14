@@ -14,10 +14,10 @@ public class GamePanel extends JPanel {
     private Timer waveTimer;
     private int waveInterval = 30000; // 30 seconds between waves
     private int currentWave;
-    private int mobSpeed = 1;
     private int hordeSize = 4;
     private int threashold = 10;
     private int maxTanker = 2;
+    private int mobSpeed = 1;
 
     private JLabel backgroundLabel;
 
@@ -72,18 +72,22 @@ public class GamePanel extends JPanel {
         new Timer().schedule(new TimerTask() {
             private int count = 0;
             int tankerCount = 0;
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int standardY = (int) (screenSize.getHeight() / 2) - 100;
     
             @Override
             public void run() {
                 if (count < hordeSize) {
-                    int minY = 500; // Minimum Y-coordinate
-                    int maxY = 630; // Maximum Y-coordinate
+                    int minY = standardY - 50; // Minimum Y-coordinate
+                    int maxY = standardY + 50; // Maximum Y-coordinate
                     int randomY = minY + random.nextInt(maxY - minY + 1); // Generate a random Y-coordinate within the range
                     int minChance = 0;
                     int maxChance = 10;
                     int tankerApparitionChance = random.nextInt(maxChance - minChance + 1);
+                    
 
-                    new Barbarian(new Coordinates(-400, randomY), GamePanel.this);
+                    Barbarian barbarian = new Barbarian(new Coordinates(-400, randomY), GamePanel.this);
+                    barbarian.setSpeed(mobSpeed);
                     count++;
 
                     if (tankerApparitionChance >= threashold && tankerCount <= maxTanker){
