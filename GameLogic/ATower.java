@@ -115,7 +115,7 @@ public abstract class ATower extends AUnit {
         
         // For each unit in global list
         for(AUnit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof Mob){
+            if(unit instanceof AMob){
                 try {
                     // get the absolute distance in x
                     int unitXPos = unit.getUnitCoordinates().get("x");
@@ -133,8 +133,8 @@ public abstract class ATower extends AUnit {
                     System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
 
                     // if the unit range >= distance between the two, push to temp list
-                    if((double) this.range >= hypothenus && unit instanceof Mob){
-                        unitsInRangeTemp.add((Mob) unit);
+                    if((double) this.range >= hypothenus && unit instanceof AMob){
+                        unitsInRangeTemp.add((AMob) unit);
                         System.out.println("Unit " + unit.getClass().getSimpleName() + " is therefore in range (" + this.range + " - " + hypothenus + ")");
                     }
                     else{
@@ -158,7 +158,7 @@ public abstract class ATower extends AUnit {
                 TimeUnit.SECONDS.sleep(this.damageRate);
                 // attack each unit in range if it has enough capacity and the unit is alive
                 for(int i = 0; i < this.unitsInRange.size(); i++){
-                    Mob unitToAttack = (Mob) this.unitsInRange.get(i);
+                    AMob unitToAttack = (AMob) this.unitsInRange.get(i);
                     if(i <= this.capacity){
                         if(unitToAttack.isAlive()){
                             this.attack(unitToAttack);
@@ -177,7 +177,7 @@ public abstract class ATower extends AUnit {
 
     @Override 
     public <T> void attack(T unit){
-        Mob castedUnit = (Mob) unit;
+        AMob castedUnit = (AMob) unit;
         
         if(castedUnit.isAlive()){
             castedUnit.setHp(this.getDamage());

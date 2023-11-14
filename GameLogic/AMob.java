@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import Exceptions.NoSuchCoordinateKeyException;
 
-public abstract class Mob extends AUnit{
+public abstract class AMob extends AUnit{
 
     /*---------- Attributes ---------- */
 
@@ -21,8 +21,7 @@ public abstract class Mob extends AUnit{
 
 
     /*---------- Constructor ---------- */
-    public Mob(float speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates){
-        
+    public AMob(float speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates){
         super(damage, damageRate, range, capacity, coordinates);
         this.hp = hp;
         this.speed = speed;
@@ -76,14 +75,17 @@ public abstract class Mob extends AUnit{
 
 
     /*---------- Methods ---------- */
-    public abstract void updateAnimation();
 
-    public void move(){
+    public void move() {
         try {
-            this.getUnitCoordinates().setXPos(this.getUnitCoordinates().get("x") + (int) this.getSpeed());
-            System.out.println("Pos on x: " + this.getUnitCoordinates().get("x")); // Debug
+            // Update the position of the JLabel
+            Coordinates coords = getUnitCoordinates();
+            coords.setXPos(coords.get("x") + (int) getSpeed());
+            this.getUnitLabel().setLocation(coords.get("x"), coords.get("y"));
+            System.out.println("Pos on x: " + coords.get("x")); // Debug
         } catch (NoSuchCoordinateKeyException e) {
-            System.out.println(e.getMessage());
+            System.out.println("no coordinates");
+            e.printStackTrace(); // Consider more meaningful exception handling
         }
     }
 
@@ -168,6 +170,18 @@ public abstract class Mob extends AUnit{
         }
         else{
             castedUnit.gameOver();
+        }
+    }
+
+    public boolean isOutsideMap(){
+        try {
+            if (this.getUnitCoordinates().get("x")>2500){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (NoSuchCoordinateKeyException e) {
+            return false;
         }
     }
 

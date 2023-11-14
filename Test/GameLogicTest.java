@@ -1,4 +1,4 @@
-package Test;
+// package Test;
 
 import Exceptions.*;
 import GameLogic.*;
@@ -6,8 +6,8 @@ import GameLogic.*;
 public class GameLogicTest {
     
     public static void main(String[] args) throws NoSuchCoordinateKeyException, MaximumLevelReachedException{
-        ATower tower = new ArcherTower(new Coordinates(2, 2));
-        ATower lavaTower = new IceTower(new Coordinates(5, 5));
+        ArcherTower tower = new ArcherTower(new Coordinates(2, 2));
+        IceTower iceTower = new IceTower(new Coordinates(5, 5));
         Barbarian barbarian = new Barbarian(new Coordinates(0, 4));
         Barbarian secondBarbarian = new Barbarian(new Coordinates(1000, 1500));
         Tanker tanker = new Tanker(new Coordinates(1, 21));
@@ -35,10 +35,10 @@ public class GameLogicTest {
 
            
 
-        // System.out.println(GlobalUnitsCoordinates.getGlobalUnitsCoordinates().get(tower.getId()));
+//         // System.out.println(GlobalUnitsCoordinates.getGlobalUnitsCoordinates().get(tower.getId()));
 
-        // for(int i = 0; i < 10; i++){
-        //     barbarian.move();   
-        // }
+//         // for(int i = 0; i < 10; i++){
+//         //     barbarian.move();   
+//         // }
     }
 }

@@ -77,7 +77,7 @@ public class Castle extends AUnit{
         
         // For each unit in global list
         for(AUnit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof Mob){
+            if(unit instanceof AMob){
                 try {
                     // get the absolute distance in x
                     int unitXPos = unit.getUnitCoordinates().get("x");
@@ -119,7 +119,7 @@ public class Castle extends AUnit{
                 TimeUnit.SECONDS.sleep(this.damageRate);
                 // attack each unit in range if it has enough capacity
                 for(int i = 0; i < this.unitsInRange.size(); i++){
-                    Mob unitToAttack = (Mob) this.unitsInRange.get(i);
+                    AMob unitToAttack = (AMob) this.unitsInRange.get(i);
                     if(i <= this.capacity){
                         System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
                         + unitToAttack.getClass().getSimpleName() + "(" + unitToAttack.getHp() + " hp left)");
@@ -138,7 +138,7 @@ public class Castle extends AUnit{
 
     @Override
     public <T> void attack(T unit) {
-        Mob castedUnit = (Mob) unit;
+        AMob castedUnit = (AMob) unit;
         
         if(castedUnit.isAlive()){
             castedUnit.setHp(this.damage);

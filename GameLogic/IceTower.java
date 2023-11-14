@@ -21,7 +21,7 @@ public class IceTower extends ATower { // Ice tower slows enemies down
 
     @Override 
     public <T> void attack(T unit){
-        Mob castedUnit = (Mob) unit;
+        AMob castedUnit = (AMob) unit;
         
         if(castedUnit.isAlive()){
             castedUnit.setHp(this.getDamage());
@@ -32,7 +32,7 @@ public class IceTower extends ATower { // Ice tower slows enemies down
         }
     }
 
-    public void slowMob(Mob mob){
+    public void slowMob(AMob mob){
         if(mob.getSpeed() > 10){
             try {
                 TimeUnit.SECONDS.sleep(this.damageRate);
