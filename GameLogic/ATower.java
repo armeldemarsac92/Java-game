@@ -156,7 +156,7 @@ public abstract class ATower extends AUnit {
             try {
                 // delay the action
                 TimeUnit.SECONDS.sleep(this.damageRate);
-                // attack each unit in range if it has enough capacity
+                // attack each unit in range if it has enough capacity and the unit is alive
                 for(int i = 0; i < this.unitsInRange.size(); i++){
                     Mob unitToAttack = (Mob) this.unitsInRange.get(i);
                     if(i <= this.capacity){
