@@ -3,16 +3,21 @@ package GameLogic;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Timer;
+
 import PixelMap.GamePanel;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
+import Exceptions.MaximumLevelReachedException;
 import Exceptions.NoSuchCoordinateKeyException;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class AUnit implements IGameObject {
+public abstract class AUnit implements IGameObject, MouseListener {
 
     /*---------- Attributes ---------- */
 
@@ -58,8 +63,11 @@ public abstract class AUnit implements IGameObject {
         this.range = range;
         this.unitLabel = new JLabel();
         this.coordinates = coordinates;
-        
 
+        if(this instanceof ATower){
+            this.unitLabel.addMouseListener(this);
+        }
+        
         try {
             unitCoordinates.add(coordinates.get("x"));
             unitCoordinates.add(coordinates.get("y"));
@@ -115,6 +123,33 @@ public abstract class AUnit implements IGameObject {
         this.loadAnimationFrames();
         this.startAnimation();
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("Mouse clicked on coordinates " + e.getX() + ";" + e.getY() + " , type: " + this.getClass().getSimpleName());
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        if(this.unitLabel.getText() == ""){
+            this.unitLabel.setText("Id: " + this.getId());
+        }
+        else{
+            this.unitLabel.setText("");
+        }
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        this.unitLabel.setText("");
+    }
+
 
     private void loadAnimationFrames() {
         animationFrames = new ArrayList<>();

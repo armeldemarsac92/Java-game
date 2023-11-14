@@ -95,17 +95,16 @@ public abstract class ATower extends AUnit {
         else{
             this.setLevel(this.level + 1); //upgrade level
             this.setDamage(this.getDamage() * 2); // increase damage
-            // this.setCharacterSpriteFilePath("Sprite level " + this.level); // change sprite
-            // this.setAttackSoundFilePath("Attack level " + this.level); // change sound
             this.setDamageRate(this.getDamageRate() * 2); // double damage rate
             this.setPrice(this.price * 2); // double tower price
             CoinSystem.spendCoins(this.price);
-            try {
-                this.characterSpriteImage = ImageIO.read(new File("assets/tower_lvl1.png"));
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+
+            if(this instanceof IceTower){
+                this.setCoreFilePath("assets/ice_tower/level_" + this.level + "/Tower-");
             }
-            
+            else if(this instanceof ArcherTower){
+                this.setCoreFilePath("assets/archer_tower/level_" + this.level + "/Tower-");
+            }
         }
     }
 
