@@ -2,7 +2,6 @@ package PixelMap;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import GameLogic.*;
@@ -21,7 +20,9 @@ public class Game implements Runnable {
         frame.add(gamePanel);
         frame.pack();
         frame.setLocationRelativeTo(null);
-    
+
+        PointSystem.intializeScoreSystem(gamePanel, screenSize);
+        PointSystem.initializeCoinsSystem(gamePanel, screenSize);
     }
 
     public void run() {
@@ -29,7 +30,7 @@ public class Game implements Runnable {
         final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; // Optimal time per frame in nanoseconds
     
         long lastLoopTime = System.nanoTime();
-    
+        
         while (running) {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
@@ -58,16 +59,17 @@ public class Game implements Runnable {
         for(AUnit unit : GlobalUnits.getGlobalUnits()){
             if(unit instanceof AMob && unit.getUnitLabel() != null ){
                 ((AMob)unit).move(); // This will update the position of the JLabel in each unit
-        }
+            }
 
-        for(AUnit tower : GlobalUnits.getGlobalUnits()){
-            if(tower instanceof ATower){
-                tower.computeUnitsInRange();
-                tower.attackUnitsInRange();
+            for(AUnit tower : GlobalUnits.getGlobalUnits()){
+                if(tower instanceof ATower){
+                    tower.computeUnitsInRange();
+                    tower.attackUnitsInRange();
+                }
             }
         }
-    }
-
+        PointSystem.updateScoreLabel();
+        PointSystem.updateCoinsLabel();
     }
 
     public static void main(String[] args) {

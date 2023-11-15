@@ -224,9 +224,7 @@ public abstract class AUnit implements IGameObject, MouseListener {
     }
     
 
-    public JLabel getUnitLabel(){
-        return this.unitLabel;
-    }
+    
 
     protected void startAnimation() {
         this.animationTimer = new Timer(50, e -> updateAnimation());
@@ -251,11 +249,17 @@ public abstract class AUnit implements IGameObject, MouseListener {
         }
     }
 
+    
+
+    /*---------- Getters ---------- */
+
     public AUnit getType(){
         return this;
     }
 
-    /*---------- Getters ---------- */
+    public JLabel getUnitLabel(){
+        return this.unitLabel;
+    }
 
     public int getDamage(){
         return this.damage;

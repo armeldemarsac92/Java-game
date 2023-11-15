@@ -102,7 +102,7 @@ public abstract class ATower extends AUnit {
             this.setDamageRate(this.getDamageRate() * 2); // Double damage rate
             this.setPrice(this.price * 2); // Double tower price
             this.setRange(400);
-            CoinSystem.spendCoins(this.price);
+            PointSystem.spendCoins(this.price);
     
             // Update core file path based on the type of tower and its new level
             if (this instanceof IceTower) {

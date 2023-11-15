@@ -40,7 +40,7 @@ public abstract class AMob extends AUnit{
         return this.hp;
     }
 
-    public int getCointValue(){
+    public int getCoinsValue(){
         return this.coinValue;
     }
 
@@ -158,7 +158,7 @@ public abstract class AMob extends AUnit{
     public void killInstance(){
         System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
         GlobalUnits.remove(this);
-        CoinSystem.earnCoins(this.coinValue);
+        PointSystem.earnCoins(this.coinValue);
         this.cleanFromView();
     }   
 
