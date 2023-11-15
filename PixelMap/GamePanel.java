@@ -26,8 +26,11 @@ public class GamePanel extends JPanel {
         setLayout(null); // Continue using null layout for absolute positioning
 
         // Initialize units and towers as before
+        initializeBackground(screenSize);
+        initializePauseIcon(screenSize); 
         initializeUnits();
-        initializeBackground(screenSize); // Pass screenSize to handle background scaling
+        
+        
     }
 
     private void initializeBackground(Dimension screenSize) {
@@ -47,6 +50,23 @@ public class GamePanel extends JPanel {
             e.printStackTrace();
         }
     }
+
+    private void initializePauseIcon(Dimension screenSize) {
+        try {
+            Image pauseImage = ImageIO.read(new File("assets/bouton-pause.png"));
+    
+            Image scaledPauseImage = pauseImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+    
+            JLabel pauseLabel = new JLabel(new ImageIcon(scaledPauseImage));
+    
+            pauseLabel.setBounds(10, 10, pauseImage.getWidth(null), pauseImage.getHeight(null)); 
+    
+            add(pauseLabel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
 
     private void initializeUnits() {
         new ArcherTower(new Coordinates(350, 250), GamePanel.this);
