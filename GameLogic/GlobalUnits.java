@@ -33,7 +33,7 @@ public class GlobalUnits {
             if (unit instanceof AMob && ((AMob)unit).isOutsideMap()){
                 // System.out.println("unit cleaned" + " " + unit.getId());
                 units.remove(unit);
-                unit.cleanup();
+                unit.cleanFromView();
                 // System.out.println(units);
                 // Perform any additional cleanup required for the unit
             }

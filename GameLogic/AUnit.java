@@ -2,6 +2,8 @@ package GameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.swing.Timer;
 
 import PixelMap.GamePanel;
@@ -239,7 +241,7 @@ public abstract class AUnit implements IGameObject, MouseListener {
     }
     
 
-    public void cleanup() {
+    public void cleanFromView() {
         if (this.animationTimer != null) {
             this.animationTimer.stop();
         }
@@ -276,7 +278,7 @@ public abstract class AUnit implements IGameObject, MouseListener {
     }
 
     public float getRange(){
-        return this.damage;
+        return this.range;
     }
 
     public Image getAttackSoundFilePath(){

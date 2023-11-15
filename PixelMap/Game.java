@@ -59,6 +59,13 @@ public class Game implements Runnable {
             if(unit instanceof AMob && unit.getUnitLabel() != null ){
                 ((AMob)unit).move(); // This will update the position of the JLabel in each unit
         }
+
+        for(AUnit tower : GlobalUnits.getGlobalUnits()){
+            if(tower instanceof ATower){
+                tower.computeUnitsInRange();
+                tower.attackUnitsInRange();
+            }
+        }
     }
 
     }

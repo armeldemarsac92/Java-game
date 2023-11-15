@@ -8,7 +8,11 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+
 
 
 public abstract class ATower extends AUnit {
@@ -18,6 +22,7 @@ public abstract class ATower extends AUnit {
     private int price;
     private int level = 0;
     private int maxLevel = 2;
+    Timer damageTimer = new Timer();
 
 
     /*---------- Constructor ---------- */
@@ -96,6 +101,7 @@ public abstract class ATower extends AUnit {
             this.setDamage(this.getDamage() * 2); // Increase damage
             this.setDamageRate(this.getDamageRate() * 2); // Double damage rate
             this.setPrice(this.price * 2); // Double tower price
+            this.setRange(400);
             CoinSystem.spendCoins(this.price);
     
             // Update core file path based on the type of tower and its new level
@@ -117,7 +123,7 @@ public abstract class ATower extends AUnit {
     @Override 
     public void computeUnitsInRange(){
         // initialize empty list (serves as setter)
-        List<AUnit> unitsInRangeTemp = new ArrayList<AUnit>();
+        List<AUnit> unitsInRangeTemp = new ArrayList <AUnit>();
         
         // For each unit in global list
         for(AUnit unit : GlobalUnits.getGlobalUnits()){
@@ -136,15 +142,15 @@ public abstract class ATower extends AUnit {
                     // get the hypothenus between the two
                     double hypothenus = Math.hypot(distanceX, distanceY);
 
-                    System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
+                    // System.out.println("Distance between " + this.getClass().getSimpleName() + " and " + unit.getClass().getSimpleName() + ": " + hypothenus);
 
                     // if the unit range >= distance between the two, push to temp list
                     if((double) this.range >= hypothenus && unit instanceof AMob){
                         unitsInRangeTemp.add((AMob) unit);
-                        System.out.println("Unit " + unit.getClass().getSimpleName() + " is therefore in range (" + this.range + " - " + hypothenus + ")");
+                        // System.out.println("Unit " + unit.getClass().getSimpleName() + " is therefore in range (" + this.range + " - " + hypothenus + ")");
                     }
                     else{
-                        System.out.println(unit.getClass().getSimpleName() + " not in range" + "(" + this.range + " - " + hypothenus + ")" );
+                        // System.out.println(unit.getClass().getSimpleName() + " not in range" + "(" + this.range + " - " + hypothenus + ")" );
                     }
                 } catch(NoSuchCoordinateKeyException e){
                     e.printStackTrace();
@@ -157,41 +163,40 @@ public abstract class ATower extends AUnit {
     }
 
     @Override
-    public void attackUnitsInRange(){
-        if(this.unitsInRange.size() > 0){
-            try {
-                // delay the action
-                TimeUnit.SECONDS.sleep(this.damageRate);
-                // attack each unit in range if it has enough capacity and the unit is alive
-                for(int i = 0; i < this.unitsInRange.size(); i++){
-                    AMob unitToAttack = (AMob) this.unitsInRange.get(i);
-                    if(i <= this.capacity){
-                        if(unitToAttack.isAlive()){
-                            this.attack(unitToAttack);
-                        }
-                    }
+    public void attackUnitsInRange() {
+    ATower thisTower = this; // ReferenGameLogic.ATower.attackUnitsInRange(ATower.java:170)ce to the ATower instance
+
+    // Schedule the TimerTask to run at fixed rate
+    damageTimer.scheduleAtFixedRate(new TimerTask() {
+        private int currentIndex = 0; // To keep track of which mob is being attacked
+
+        @Override
+        public void run() {
+            List<AUnit> unitsInRange = thisTower.getUnitsInRange();
+            if (!unitsInRange.isEmpty()) {
+                // Attack one mob at a time
+                AMob mob = (AMob) unitsInRange.get(currentIndex);
+                if (mob.isAlive()) {
+                    thisTower.attack(mob);
                 }
-            } catch(InterruptedException e){
-                System.out.println(e.getMessage());
-                Thread.currentThread().interrupt();
+
+                // Move to the next mob in the list
+                currentIndex = (currentIndex + 1) % unitsInRange.size();
             }
         }
-        else{
-            System.out.println("No unit in range");
-        }
+    }, 0, thisTower.getDamageRate()); // Start immediately, repeat every damageRate milliseconds
     }
 
-    @Override 
-    public <T> void attack(T unit){
-        AMob castedUnit = (AMob) unit;
-        
-        if(castedUnit.isAlive()){
-            castedUnit.setHp(this.getDamage());
-            System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
-                + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left)");
-        }
-        else{
-            castedUnit.killInstance();
-        }
+    @Override
+    public <T> void attack(T unit) {
+    AMob castedUnit = (AMob) unit;
+
+    if (castedUnit.isAlive()) {
+        castedUnit.setHp(this.getDamage());
+        System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
+            + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left)");
+    } else {
+        castedUnit.killInstance();
+    }
     }
 }

@@ -57,7 +57,6 @@ public abstract class AMob extends AUnit{
         if(hpTemp - damage <= 0){
             hpTemp = 0;
             this.setAlive(false);
-            this.killInstance();
         }
         else{
             hpTemp -= damage;
@@ -160,6 +159,7 @@ public abstract class AMob extends AUnit{
         System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
         GlobalUnits.remove(this);
         CoinSystem.earnCoins(this.coinValue);
+        this.cleanFromView();
     }   
 
     @Override 
