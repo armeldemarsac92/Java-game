@@ -11,6 +11,8 @@ public class Game implements Runnable {
     private JFrame frame;
     private GamePanel gamePanel;
     private boolean running = true;
+    private static boolean gameOver = false;
+
 
     public Game() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -21,8 +23,10 @@ public class Game implements Runnable {
         frame.pack();
         frame.setLocationRelativeTo(null);
 
+
         PointSystem.intializeScoreSystem(gamePanel, screenSize);
         PointSystem.initializeCoinsSystem(gamePanel, screenSize);
+        PointSystem.setCoins(50);
     }
 
     public void run() {
@@ -30,14 +34,13 @@ public class Game implements Runnable {
         final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; // Optimal time per frame in nanoseconds
     
         long lastLoopTime = System.nanoTime();
-        
         while (running) {
             long now = System.nanoTime();
             long updateLength = now - lastLoopTime;
             lastLoopTime = now;
             double delta = updateLength / ((double)OPTIMAL_TIME);
     
-            updateGame(); // Update the game state
+            this.updateGame(); // Update the game state
             GlobalUnits.cleanup();
     
             // Sleep for the remaining frame time
@@ -50,6 +53,7 @@ public class Game implements Runnable {
                 Thread.currentThread().interrupt();
                 break;
             }
+            
         }
     }
     
@@ -79,5 +83,13 @@ public class Game implements Runnable {
             game.frame.setVisible(true);
             new Thread(game).start(); // Start the game loop in a new thread.
         });
+    }
+
+    public static boolean isGameOver(){
+        return Game.gameOver;
+    }
+
+    public static void setGameOver(boolean gameOver){
+        Game.gameOver = gameOver;
     }
 }

@@ -2,8 +2,6 @@ package GameLogic;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 import javax.imageio.ImageIO;
 import PixelMap.GamePanel;
 
@@ -17,6 +15,4 @@ public class ArcherTower extends ATower{ // archer tower just shoots at enemies
             e.printStackTrace();
         }
     }
-
-
 }

@@ -2,16 +2,12 @@ package GameLogic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.swing.Timer;
-
 import PixelMap.GamePanel;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
-
 import Exceptions.MaximumLevelReachedException;
 import Exceptions.NoSuchCoordinateKeyException;
 import java.awt.*;

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -17,7 +18,7 @@ public abstract class ATower extends AUnit {
 
     /*---------- Attributes ---------- */
 
-    private int price;
+    private int price = 10;
     private int level = 0;
     private int maxLevel = 2;
     Timer damageTimer = new Timer();
@@ -91,28 +92,33 @@ public abstract class ATower extends AUnit {
     /*---------- Methods ---------- */
     
     public void upgrade() throws MaximumLevelReachedException {
-        System.out.println(this.level);
-        if (this.level >= this.maxLevel) {
-            throw new MaximumLevelReachedException("Maximum level reached (" + this.level + ")");
-        } else {
-            this.setLevel(this.level + 1); // Upgrade level
-            this.setDamage(this.getDamage() * 2); // Increase damage
-            this.setDamageRate(this.getDamageRate() * 2); // Double damage rate
-            this.setPrice(this.price * 2); // Double tower price
-            this.setRange(400);
-            PointSystem.spendCoins(this.price);
-    
-            // Update core file path based on the type of tower and its new level
-            if (this instanceof IceTower) {
-                this.sizeX = 400;
-                this.setCoreFilePath("assets/ice_tower/level_" + this.level + "/Tower-");
-            } else if (this instanceof ArcherTower) {
-                this.setCoreFilePath("assets/archer_tower/level_" + this.level + "/Tower-");
+        if(PointSystem.getCoins() >= this.price){
+            if (this.level >= this.maxLevel) {
+                throw new MaximumLevelReachedException("Maximum level reached (" + this.level + ")");
+            } else {
+                this.setLevel(this.level + 1); // Upgrade level
+                this.setDamage(this.getDamage() * 2); // Increase damage
+                this.setDamageRate(this.getDamageRate() * 2); // Double damage rate
+                this.setPrice(this.price * 2); // Double tower price
+                this.setRange(400);
+                PointSystem.spendCoins(this.price);
+        
+                // Update core file path based on the type of tower and its new level
+                if (this instanceof IceTower) {
+                    this.sizeX = 400;
+                    this.setCoreFilePath("assets/ice_tower/level_" + this.level + "/Tower-");
+                } else if (this instanceof ArcherTower) {
+                    this.setCoreFilePath("assets/archer_tower/level_" + this.level + "/Tower-");
+                }
+        
+                // Reload animation frames with the new assets
+                this.reloadAnimationFramesAsync();
             }
-    
-            // Reload animation frames with the new assets
-            this.reloadAnimationFramesAsync();
         }
+        else{
+            System.out.println("Not enough coins");
+        }
+        
     }
     
     
@@ -162,39 +168,40 @@ public abstract class ATower extends AUnit {
 
     @Override
     public void attackUnitsInRange() {
-    ATower thisTower = this; // ReferenGameLogic.ATower.attackUnitsInRange(ATower.java:170)ce to the ATower instance
+        ATower thisTower = this; // ReferenGameLogic.ATower.attackUnitsInRange(ATower.java:170)ce to the ATower instance
 
-    // Schedule the TimerTask to run at fixed rate
-    damageTimer.scheduleAtFixedRate(new TimerTask() {
-        private int currentIndex = 0; // To keep track of which mob is being attacked
+        // Schedule the TimerTask to run at fixed rate
+        damageTimer.scheduleAtFixedRate(new TimerTask() {
+            private int currentIndex = 0; // To keep track of which mob is being attacked
 
-        @Override
-        public void run() {
-            List<AUnit> unitsInRange = thisTower.getUnitsInRange();
-            if (!unitsInRange.isEmpty()) {
-                // Attack one mob at a time
-                AMob mob = (AMob) unitsInRange.get(currentIndex);
-                if (mob.isAlive()) {
-                    thisTower.attack(mob);
+            @Override
+            public void run() {
+                List<AUnit> unitsInRange = thisTower.getUnitsInRange();
+                if (!unitsInRange.isEmpty()) {
+                    // Attack one mob at a time
+                    AMob mob = (AMob) unitsInRange.get(currentIndex);
+                    if (mob.isAlive()) {
+                        thisTower.attack(mob);
+                        PointSystem.earnCoins(mob.getCoinsValue());
+                    }
+
+                    // Move to the next mob in the list
+                    currentIndex = (currentIndex + 1) % unitsInRange.size();
                 }
-
-                // Move to the next mob in the list
-                currentIndex = (currentIndex + 1) % unitsInRange.size();
             }
-        }
-    }, 0, thisTower.getDamageRate()); // Start immediately, repeat every damageRate milliseconds
+        }, 0, this.getDamageRate()); // Start immediately, repeat every damageRate milliseconds
     }
 
     @Override
     public <T> void attack(T unit) {
-    AMob castedUnit = (AMob) unit;
+        AMob castedUnit = (AMob) unit;
 
-    if (castedUnit.isAlive()) {
-        castedUnit.setHp(this.getDamage());
-        System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
-            + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left)");
-    } else {
-        castedUnit.killInstance();
-    }
+        if (castedUnit.isAlive()) {
+            castedUnit.setHp(this.getDamage());
+            System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
+                + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left); id: " + castedUnit.getId());
+        } else {
+            castedUnit.killInstance();
+        }
     }
 }

@@ -16,6 +16,7 @@ public class PointSystem {
     private static int score = 0;
     private static JLabel scoreLabel;
     private static JLabel coinsLabel;
+    private static JLabel gameOverLabel;
     
 
     /*---------- Getters ---------- */
@@ -89,6 +90,6 @@ public class PointSystem {
     }
 
     public static void updateCoinsLabel(){
-        PointSystem.coinsLabel.setText("Coins :" + PointSystem.score);
+        PointSystem.coinsLabel.setText("Coins :" + PointSystem.coins);
     }
 }
