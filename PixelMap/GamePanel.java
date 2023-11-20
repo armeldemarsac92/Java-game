@@ -34,6 +34,8 @@ public class GamePanel extends JPanel {
     private JPopupMenu pauseMenu;
 
     private boolean isPauseMenuOpen = false;
+    private boolean isHowToPlayPopupOpen = false;
+
 
     public GamePanel(Dimension screenSize, Game game) {
         this.game = game;
@@ -99,12 +101,10 @@ public class GamePanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 game.pauseGame();
 
-                // Calculer la position centrale de l'écran
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
                 int x = (screenSize.width - pauseMenu.getPreferredSize().width) / 2;
                 int y = (screenSize.height - pauseMenu.getPreferredSize().height) / 2;
 
-                // Afficher le menu contextuel au centre de l'écran
                 pauseMenu.show(e.getComponent(), x, y);
             }
         });
@@ -115,7 +115,7 @@ public class GamePanel extends JPanel {
         pauseMenu = new JPopupMenu("Pause Menu");
         Font menuFont = new Font("Arial", Font.BOLD, 16);
 
-        String[] menuItems = { "Continue", "Restart", "Menu" };
+        String[] menuItems = { "Continue", "How to play ?"};
         for (String itemText : menuItems) {
             JMenuItem menuItem = new JMenuItem();
             menuItem.setLayout(new BorderLayout());
@@ -142,10 +142,13 @@ public class GamePanel extends JPanel {
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (itemText.equals("Menu")) {
-                        SwingUtilities.getWindowAncestor(GamePanel.this).dispose();
-                        GameMenu menu = new GameMenu();
-                        menu.setVisible(true);
+                    if (itemText.equals("How to play ?")) {
+                        isHowToPlayPopupOpen = true;
+                        JOptionPane.showMessageDialog(GamePanel.this,
+                            "MusaReign is an engaging tower defense game where the objective is straightforward:\n prevent enemies from crossing the entire map to avoid losing life points.\n To achieve this, players must strategically construct defense towers using coins. Each successful\n defense not only halts enemy progress but also enhances the player's ability to fortify their\n defenses further. The game combines strategic planning with quick decision-making, offering\n an immersive experience for all tower defense enthusiasts.",
+                            "How to Play", JOptionPane.INFORMATION_MESSAGE);
+                        isHowToPlayPopupOpen = false;
+                        checkAndResumeGame();
                     }
                 }
             });
@@ -153,27 +156,37 @@ public class GamePanel extends JPanel {
             pauseMenu.add(menuItem);
         }
 
+        
+        
+
         pauseMenu.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 isPauseMenuOpen = true;
             }
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                if (isPauseMenuOpen) {
-                    game.resumeGame();
-                }
+                SwingUtilities.invokeLater(() -> {
+                    checkAndResumeGame();
+                });
                 isPauseMenuOpen = false;
             }
 
             public void popupMenuCanceled(PopupMenuEvent e) {
-                if (isPauseMenuOpen) {
+                if (!isHowToPlayPopupOpen) {
                     game.resumeGame();
                 }
+        
                 isPauseMenuOpen = false;
             }
         });
 
     }
+
+    private void checkAndResumeGame() {
+            if (!isPauseMenuOpen && !isHowToPlayPopupOpen) {
+                game.resumeGame();
+            }
+        }
 
     private void initializeUnits() {
         new ArcherTower(new Coordinates(350, 250), GamePanel.this);
