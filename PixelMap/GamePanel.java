@@ -17,7 +17,6 @@ import java.util.TimerTask;
 import java.util.Timer;
 import java.util.Random;
 import GameLogic.*;
-import GraphicInterface.GameMenu;
 
 public class GamePanel extends JPanel {
     private Game game;

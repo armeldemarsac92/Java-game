@@ -9,7 +9,7 @@ import GameLogic.*;
 
 public class Game implements Runnable {
 
-    private JFrame frame;
+    public JFrame frame;
     private GamePanel gamePanel;
     private boolean running = true;
     private volatile boolean isPaused = false;
@@ -33,6 +33,7 @@ public class Game implements Runnable {
         isPaused = false;
         notify(); // Réveille le thread en pause
     }
+    
 
     public void run() {
         final int TARGET_FPS = 120; // Target frames per second
@@ -58,9 +59,7 @@ public class Game implements Runnable {
             double delta = updateLength / ((double) OPTIMAL_TIME);
 
             updateGame(); // Update the game state
-            GlobalUnits.cleanup();
 
-            // Sleep for the remaining frame time
             try {
                 long sleepTime = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
                 if (sleepTime > 0) {
@@ -74,13 +73,12 @@ public class Game implements Runnable {
     }
 
     private void updateGame() {
-        // Update game logic here
+        // Update game logic
         for (AUnit unit : GlobalUnits.getGlobalUnits()) {
             if (unit instanceof AMob && unit.getUnitLabel() != null) {
                 ((AMob) unit).move(); // This will update the position of the JLabel in each unit
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -91,6 +89,5 @@ public class Game implements Runnable {
             new Thread(game).start(); // Start the game loop in a new thread.
         });
     }
-    
     
 }
