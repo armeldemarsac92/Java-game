@@ -1,0 +1,6 @@
+Nathan: 50
+Armel: 60
+Jonathan 25
+Antoine: 20
+Antoine: 20
+Antoine: 20
