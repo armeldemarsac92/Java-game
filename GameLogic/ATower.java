@@ -103,8 +103,11 @@ public abstract class ATower extends AUnit {
                 this.setDamage(this.getDamage() * 2); 
                 this.setDamageRate(this.getDamageRate() * 2);
                 this.setPrice(this.price * 2); 
-                this.setRange(this.range + 50);
-        
+                if (this.level == 1){
+                    this.setRange(this.range + 300);
+                } else {
+                    this.setRange(this.range + 50);
+                }
                 // Update core file path based on the type of tower and its new level
                 if (this instanceof IceTower) {
                     this.sizeX = 400;
@@ -170,7 +173,6 @@ public abstract class ATower extends AUnit {
         // set the value
         this.setUnitsInRange(unitsInRangeTemp);
     }
-
     @Override
     public void attackUnitsInRange() {
         if (this.damageTimer == null) {
@@ -194,6 +196,7 @@ public abstract class ATower extends AUnit {
             }, 0, getDamageRate());
         }
     }
+    
     
 
     

@@ -28,7 +28,7 @@ public class Game implements Runnable {
         UserInterface.intializeScoreSystem(gamePanel, screenSize);
         UserInterface.initializeCoinsSystem(gamePanel, screenSize);
         UserInterface.initializeUserName(gamePanel, screenSize, username);
-        UserInterface.setCoins(10);
+        UserInterface.setCoins(30);
     }
 
     public void run() {
