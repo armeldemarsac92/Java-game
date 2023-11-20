@@ -32,8 +32,11 @@ public class GlobalUnits {
         for (AUnit unit : units) {
             if (unit instanceof AMob && ((AMob)unit).isOutsideMap()){
                 // System.out.println("unit cleaned" + " " + unit.getId());
+                if(User.getUserHp() > 0){
+                    User.decrementUserHp(unit.getDamage());
+                }
                 units.remove(unit);
-                unit.cleanup();
+                unit.cleanFromView();
                 // System.out.println(units);
                 // Perform any additional cleanup required for the unit
             }

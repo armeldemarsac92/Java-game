@@ -13,20 +13,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.util.TimerTask;
-import java.util.Timer;
-import java.util.Random;
 import GameLogic.*;
 
 public class GamePanel extends JPanel {
-    private Game game;
-    private Timer waveTimer;
-    private int waveInterval = 30000; // 30 seconds between waves
-    private int currentWave;
-    private int hordeSize = 4;
-    private int threashold = 10;
-    private int maxTanker = 2;
-    private int mobSpeed = 1;
+    
 
     private JLabel backgroundLabel;
     private JLabel pauseLabel;
@@ -36,9 +26,7 @@ public class GamePanel extends JPanel {
     private boolean isPauseMenuOpen = false;
     private boolean isHowToPlayPopupOpen = false;
 
-
     public GamePanel(Dimension screenSize, Game game) {
-        this.game = game;
         setPreferredSize(screenSize); // Set the panel size to the screen size
         setLayout(null); // Continue using null layout for absolute positioning
 
@@ -46,7 +34,7 @@ public class GamePanel extends JPanel {
         // Initialize background first
         initializeBackground(screenSize);
         // Then initialize pause icon
-        initializePauseIcon(screenSize);
+        initializePauseIcon(screenSize, game);
         // Initialize units
         initializeUnits();
 
@@ -82,7 +70,7 @@ public class GamePanel extends JPanel {
         }
     }
 
-    private void initializePauseIcon(Dimension screenSize) {
+    private void initializePauseIcon(Dimension screenSize, Game game) {
         try {
             Image pauseImage = ImageIO.read(new File("assets/bouton-pause.png"));
             Image scaledPauseImage = pauseImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -95,7 +83,7 @@ public class GamePanel extends JPanel {
             e.printStackTrace();
         }
 
-        createPauseMenu();
+        createPauseMenu(game);
 
         pauseLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -111,11 +99,11 @@ public class GamePanel extends JPanel {
 
     }
 
-    private void createPauseMenu() {
+    private void createPauseMenu(Game game) {
         pauseMenu = new JPopupMenu("Pause Menu");
         Font menuFont = new Font("Arial", Font.BOLD, 16);
 
-        String[] menuItems = { "Continue", "How to play ?"};
+        String[] menuItems = { "Continue", "Restart", "Menu", "How to play ?" };
         for (String itemText : menuItems) {
             JMenuItem menuItem = new JMenuItem();
             menuItem.setLayout(new BorderLayout());
@@ -142,16 +130,36 @@ public class GamePanel extends JPanel {
             menuItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    if (itemText.equals("Menu")) {
+                        // Close the current game window
+                        SwingUtilities.getWindowAncestor(GamePanel.this).dispose();
+            
+                        // Create and show the main menu
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                GameMenu menu = new GameMenu();
+                                menu.setVisible(true);
+                            }
+                        });
+                    }
+                }
+            });
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
                     if (itemText.equals("How to play ?")) {
                         isHowToPlayPopupOpen = true;
                         JOptionPane.showMessageDialog(GamePanel.this,
                             "MusaReign is an engaging tower defense game where the objective is straightforward:\n prevent enemies from crossing the entire map to avoid losing life points.\n To achieve this, players must strategically construct defense towers using coins. Each successful\n defense not only halts enemy progress but also enhances the player's ability to fortify their\n defenses further. The game combines strategic planning with quick decision-making, offering\n an immersive experience for all tower defense enthusiasts.",
                             "How to Play", JOptionPane.INFORMATION_MESSAGE);
                         isHowToPlayPopupOpen = false;
-                        checkAndResumeGame();
+                        checkAndResumeGame(game);
                     }
                 }
             });
+            
 
             pauseMenu.add(menuItem);
         }
@@ -166,7 +174,7 @@ public class GamePanel extends JPanel {
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 SwingUtilities.invokeLater(() -> {
-                    checkAndResumeGame();
+                    checkAndResumeGame(game);
                 });
                 isPauseMenuOpen = false;
             }
@@ -182,11 +190,11 @@ public class GamePanel extends JPanel {
 
     }
 
-    private void checkAndResumeGame() {
-            if (!isPauseMenuOpen && !isHowToPlayPopupOpen) {
-                game.resumeGame();
-            }
+    private void checkAndResumeGame(Game game) {
+        if (!isPauseMenuOpen && !isHowToPlayPopupOpen) {
+            game.resumeGame();
         }
+    }
 
     private void initializeUnits() {
         new ArcherTower(new Coordinates(350, 250), GamePanel.this);
@@ -195,80 +203,12 @@ public class GamePanel extends JPanel {
         new ArcherTower(new Coordinates(1850, 750), GamePanel.this);
         new ArcherTower(new Coordinates(550, 750), GamePanel.this);
 
-        waveTimer = new Timer();
-        waveTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                spawnWave();
-            }
-        }, 0, waveInterval);
     }
 
-    private void spawnWave() {
-        currentWave++;
-        hordeSize++;
-        waveInterval += 10;
-        System.out.println("Spawning wave: " + currentWave);
-        Random random = new Random();
-        int minTimer = 800;
-        int maxTimer = 2000;
-        int randomTimer = minTimer + random.nextInt(maxTimer - minTimer + 1);
-
-        new Timer().schedule(new TimerTask() {
-            private int count = 0;
-            int tankerCount = 0;
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            int standardY = (int) (screenSize.getHeight() / 2) - 100;
-
-            @Override
-            public void run() {
-                if (count < hordeSize) {
-                    int minY = standardY - 50; // Minimum Y-coordinate
-                    int maxY = standardY + 50; // Maximum Y-coordinate
-                    int randomY = minY + random.nextInt(maxY - minY + 1); // Generate a random Y-coordinate within the
-                                                                          // range
-                    int minChance = 0;
-                    int maxChance = 10;
-                    int tankerApparitionChance = random.nextInt(maxChance - minChance + 1);
-
-                    Barbarian barbarian = new Barbarian(new Coordinates(-400, randomY), GamePanel.this);
-                    barbarian.setSpeed(mobSpeed);
-                    count++;
-
-                    if (tankerApparitionChance >= threashold && tankerCount <= maxTanker) {
-                        new Tanker(new Coordinates(-400, randomY), GamePanel.this);
-                        count += 2;
-                        tankerCount++;
-                    }
-
-                } else {
-                    this.cancel();
-                }
-            }
-        }, 0, randomTimer); // random delay between each mob spawn
-        threashold--;
-        if (currentWave % 5 == 0) {
-            mobSpeed++;
-            maxTanker++;
-        }
-    }
+    
 
     public GamePanel getInstance() {
         return this;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Tower Defense Game");
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-            Game game = new Game();
-            GamePanel panel = new GamePanel(screenSize, game);
-
-            frame.add(panel);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize frame before making it visible
-            frame.setVisible(true);
-        });
-    }
 }
+

@@ -1,11 +1,14 @@
 package GameLogic;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import PixelMap.GamePanel;
-
 import Exceptions.NoSuchCoordinateKeyException;
 
 public abstract class AMob extends AUnit{
@@ -19,7 +22,7 @@ public abstract class AMob extends AUnit{
     private boolean alive = true;
     protected List<Image> frames = new ArrayList<>();
     protected int currentFrame = 0;
-
+    private JLabel hpLabel;
 
     /*---------- Constructor ---------- */
     public AMob(float speed, int hp, int damage, int damageRate, int range, int capacity, int coinValue, Coordinates coordinates, GamePanel gamePanel){
@@ -27,6 +30,15 @@ public abstract class AMob extends AUnit{
         this.hp = hp;
         this.speed = speed;
         this.coinValue = coinValue;
+
+        // Initialize text label
+        this.hpLabel = new JLabel("HP: " + this.hp);
+        this.hpLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        this.hpLabel.setForeground(Color.WHITE);
+        parentContainer.add(this.hpLabel);
+        parentContainer.setComponentZOrder(this.hpLabel, Math.abs(GlobalUnits.getIndex(this) * (-1)) + 1); // Place it above the mob
+
+        this.updateTextLabelPosition(); // Set initial position
     }
 
 
@@ -40,7 +52,7 @@ public abstract class AMob extends AUnit{
         return this.hp;
     }
 
-    public int getCointValue(){
+    public int getCoinsValue(){
         return this.coinValue;
     }
 
@@ -87,6 +99,30 @@ public abstract class AMob extends AUnit{
         } catch (NoSuchCoordinateKeyException e) {
             System.out.println("no coordinates");
             e.printStackTrace(); // Consider more meaningful exception handling
+        }
+
+        SwingUtilities.invokeLater(this::updateTextLabelPosition);
+    }
+
+    private void updateTextLabelPosition() {
+        try {
+            Coordinates coords = getUnitCoordinates();
+            
+            // Check if hpLabel is not null before using it
+            if (this.hpLabel != null) {
+                this.hpLabel.setBounds(coords.get("x"), coords.get("y") - 20, 100, 20); // Adjust as needed
+                this.hpLabel.setText("HP: " + this.hp); // Set text as needed
+            }
+        } catch (NoSuchCoordinateKeyException e) {
+            e.printStackTrace(); // Handle exception
+        }
+    }
+
+    @Override
+    public void cleanFromView() {
+        super.cleanFromView();
+        if (this.hpLabel.getParent() != null) {
+            this.hpLabel.getParent().remove(this.hpLabel);
         }
     }
 
@@ -156,12 +192,25 @@ public abstract class AMob extends AUnit{
         }
     }
 
-    public void killInstance(){
-        System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
+    public void killInstance() {
         GlobalUnits.remove(this);
-        CoinSystem.earnCoins(this.coinValue);
-    }   
+        // System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
+    
+        // Set the new animation parameters
+        this.setNumberOfFrames(31);
+        this.setCoreFilePath("assets/dead_barbarian/Illustration_sans_titre-");
+    
+        // Trigger the reloading of the animation frames
+        this.reloadAnimationFramesAsync();
+    
+        // Award points for killing the mob
+        UserInterface.earnCoins(this.coinValue);
 
+        // Increment the score
+        UserInterface.incrementScore(this.coinValue);
+        this.hpLabel.remove(parentContainer);
+    }
+    
     @Override 
     public <T> void attack(T unit){
         Castle castedUnit = (Castle) unit;
