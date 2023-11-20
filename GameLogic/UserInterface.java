@@ -19,6 +19,7 @@ public class UserInterface {
     private static JLabel scoreLabel;
     private static JLabel coinsLabel;
     private static JLabel userNameLabel;
+    private static JLabel userHpLabel;
     public static Map<String, Integer> scores = new HashMap<>();
 
 
@@ -113,6 +114,17 @@ public class UserInterface {
         gamePanel.setComponentZOrder(userNameLabel, 0);
     }
 
+    public static void initializeUserHp(GamePanel gamePanel, Dimension screenSize){
+        UserInterface.userHpLabel = new JLabel("Your HP left: " + User.getUserHp());
+        userHpLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        userHpLabel.setHorizontalAlignment(JLabel.LEFT);
+        userHpLabel.setVerticalAlignment(JLabel.BOTTOM);
+        userHpLabel.setBounds(1, 1, screenSize.width, screenSize.height);
+        userHpLabel.setForeground(Color.RED);
+        gamePanel.add(userHpLabel);
+        gamePanel.setComponentZOrder(userHpLabel, 0);
+    }
+
     public static void updateScoreLabel() {
         UserInterface.scoreLabel.setText("Score: " + UserInterface.score);
     }
@@ -123,6 +135,10 @@ public class UserInterface {
 
     public static void addScore(String name, int score) {
         UserInterface.scores.put(name, score);
+    }
+
+    public static void updatePlayerHpLabel(){
+        UserInterface.userHpLabel.setText("Your HP left: " + User.getUserHp());
     }
 
     public static void removeScore(String name) {

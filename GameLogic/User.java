@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 
 public class User extends JDialog {
     private JTextField name;
+    private static int userHp = 500;
 
     public User(){
         super(new JFrame("Enter your username"), "Add Member");
@@ -46,6 +47,19 @@ public class User extends JDialog {
 
     public String getName(){
         return this.name.getText();
+    }
+
+    public static int getUserHp(){
+        return User.userHp;
+    }
+
+    public void decrementUserHp(int damage){
+        if(User.userHp - damage >= 0){
+            User.userHp -= damage;
+        }
+        else{
+            User.userHp = 0;
+        }
     }
 }
 
