@@ -32,6 +32,8 @@ public abstract class ATower extends AUnit {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        this.damageTimer=null;
+        this.attackUnitsInRange();
         System.out.println("----------- Tower instantiated -----------");
         System.out.println("Id: " + this.getId());
         System.out.println("Damage: " + this.getDamage());
@@ -162,28 +164,32 @@ public abstract class ATower extends AUnit {
 
     @Override
     public void attackUnitsInRange() {
-    ATower thisTower = this; // ReferenGameLogic.ATower.attackUnitsInRange(ATower.java:170)ce to the ATower instance
-
-    // Schedule the TimerTask to run at fixed rate
-    damageTimer.scheduleAtFixedRate(new TimerTask() {
-        private int currentIndex = 0; // To keep track of which mob is being attacked
-
-        @Override
-        public void run() {
-            List<AUnit> unitsInRange = thisTower.getUnitsInRange();
-            if (!unitsInRange.isEmpty()) {
-                // Attack one mob at a time
-                AMob mob = (AMob) unitsInRange.get(currentIndex);
-                if (mob.isAlive()) {
-                    thisTower.attack(mob);
+        if (this.damageTimer == null) {
+            this.damageTimer = new Timer();
+            System.out.println("attack");
+            this.damageTimer.scheduleAtFixedRate(new TimerTask() {
+                private int currentIndex = 0;
+    
+                @Override
+                public void run() {
+                    List<AUnit> unitsInRange = getUnitsInRange();
+                    if (unitsInRange != null && !unitsInRange.isEmpty()) {
+                        currentIndex = currentIndex % unitsInRange.size(); // Ensure currentIndex is valid
+                        AMob mob = (AMob) unitsInRange.get(currentIndex);
+                        if (mob.isAlive()) {
+                            attack(mob);
+                        }
+                        currentIndex = (currentIndex + 1) % unitsInRange.size();
+                    }
                 }
-
-                // Move to the next mob in the list
-                currentIndex = (currentIndex + 1) % unitsInRange.size();
-            }
+            }, 0, getDamageRate());
         }
-    }, 0, thisTower.getDamageRate()); // Start immediately, repeat every damageRate milliseconds
     }
+    
+
+    
+    
+
 
     @Override
     public <T> void attack(T unit) {
@@ -194,7 +200,7 @@ public abstract class ATower extends AUnit {
         System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
             + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left)");
     } else {
-        castedUnit.killInstance();
+        // castedUnit.killInstance();
     }
     }
 }

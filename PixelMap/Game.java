@@ -55,22 +55,20 @@ public class Game implements Runnable {
     
 
     private void updateGame() {
-        // Update game logic here
-        for(AUnit unit : GlobalUnits.getGlobalUnits()){
-            if(unit instanceof AMob && unit.getUnitLabel() != null ){
-                ((AMob)unit).move(); // This will update the position of the JLabel in each unit
+        for (AUnit unit : GlobalUnits.getGlobalUnits()) {
+            if (unit instanceof AMob && unit.getUnitLabel() != null) {
+                ((AMob) unit).move();
             }
-
-            for(AUnit tower : GlobalUnits.getGlobalUnits()){
-                if(tower instanceof ATower){
-                    tower.computeUnitsInRange();
-                    tower.attackUnitsInRange();
-                }
+    
+            if (unit instanceof ATower) {
+                unit.computeUnitsInRange();
+                // Do not call attackUnitsInRange here as it's handled by the timer
             }
         }
         PointSystem.updateScoreLabel();
         PointSystem.updateCoinsLabel();
     }
+    
 
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "True");
