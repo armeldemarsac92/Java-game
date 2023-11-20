@@ -208,6 +208,7 @@ public abstract class AMob extends AUnit{
 
         // Increment the score
         UserInterface.incrementScore(this.coinValue);
+        this.hpLabel.remove(parentContainer);
     }
     
     @Override 

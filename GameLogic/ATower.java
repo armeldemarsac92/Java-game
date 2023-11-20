@@ -117,6 +117,8 @@ public abstract class ATower extends AUnit {
                 } else {
                     this.setRange(this.range + 50);
                 }
+
+                SwingUtilities.invokeLater(this::updateTextLabelPosition);
                 // Update core file path based on the type of tower and its new level
                 if (this instanceof IceTower) {
                     this.sizeX = 400;
