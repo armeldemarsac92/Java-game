@@ -53,7 +53,7 @@ public class User extends JDialog {
         return User.userHp;
     }
 
-    public void decrementUserHp(int damage){
+    public static void decrementUserHp(int damage){
         if(User.userHp - damage >= 0){
             User.userHp -= damage;
         }
