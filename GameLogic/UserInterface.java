@@ -70,6 +70,15 @@ public class UserInterface {
         UserInterface.coins = coinsTemp;
     }
 
+    public static boolean hasEnoughCoins(int price){
+        if(UserInterface.coins - price < 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
     public static void intializeScoreSystem(GamePanel gamePanel, Dimension screenSize){
         UserInterface.scoreLabel = new JLabel("Score: " + UserInterface.score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 24));

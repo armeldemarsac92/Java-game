@@ -118,7 +118,7 @@ public class GamePanel extends JPanel {
                     barbarian.setSpeed(mobSpeed);
                     count++;
 
-                    if (tankerApparitionChance >= threashold && tankerCount <= maxTanker) {
+                    if (tankerApparitionChance >= threashold && tankerCount <= maxTanker && count > 3){
                         new Tanker(new Coordinates(-400, randomY), GamePanel.this);
                         count += 2;
                         tankerCount++;

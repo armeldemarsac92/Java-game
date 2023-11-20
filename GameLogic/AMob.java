@@ -57,6 +57,7 @@ public abstract class AMob extends AUnit{
         if(hpTemp - damage <= 0){
             hpTemp = 0;
             this.setAlive(false);
+            this.killInstance();
         }
         else{
             hpTemp -= damage;
@@ -155,13 +156,24 @@ public abstract class AMob extends AUnit{
         }
     }
 
-    public void killInstance(){
-        System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
+    public void killInstance() {
         GlobalUnits.remove(this);
+        // System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
+    
+        // Set the new animation parameters
+        this.setNumberOfFrames(31);
+        this.setCoreFilePath("assets/dead_barbarian/Illustration_sans_titre-");
+    
+        // Trigger the reloading of the animation frames
+        this.reloadAnimationFramesAsync();
+    
+        // Award points for killing the mob
         UserInterface.earnCoins(this.coinValue);
-        this.cleanFromView();
-    }   
 
+        // Increment the score
+        UserInterface.incrementScore(this.coinValue);
+    }
+    
     @Override 
     public <T> void attack(T unit){
         Castle castedUnit = (Castle) unit;
