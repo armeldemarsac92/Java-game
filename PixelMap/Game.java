@@ -2,6 +2,9 @@ package PixelMap;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import GameLogic.*;
@@ -13,8 +16,7 @@ public class Game implements Runnable {
     private boolean running = true;
     private static boolean gameOver = false;
 
-
-    public Game() {
+    public Game(String username) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         gamePanel = new GamePanel(screenSize);
         frame = new JFrame("Game");
@@ -23,10 +25,10 @@ public class Game implements Runnable {
         frame.pack();
         frame.setLocationRelativeTo(null);
 
-
-        PointSystem.intializeScoreSystem(gamePanel, screenSize);
-        PointSystem.initializeCoinsSystem(gamePanel, screenSize);
-        PointSystem.setCoins(50);
+        UserInterface.intializeScoreSystem(gamePanel, screenSize);
+        UserInterface.initializeCoinsSystem(gamePanel, screenSize);
+        UserInterface.initializeUserName(gamePanel, screenSize, username);
+        UserInterface.setCoins(50);
     }
 
     public void run() {
@@ -72,17 +74,27 @@ public class Game implements Runnable {
                 }
             }
         }
-        PointSystem.updateScoreLabel();
-        PointSystem.updateCoinsLabel();
+        UserInterface.updateScoreLabel();
+        UserInterface.updateCoinsLabel();
     }
 
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "True");
-        SwingUtilities.invokeLater(() -> {
-            Game game = new Game();
-            game.frame.setVisible(true);
-            new Thread(game).start(); // Start the game loop in a new thread.
+
+        User user = new User();
+        user.setLocationRelativeTo(null);
+        user.setVisible(true);
+
+        user.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosed(WindowEvent e){
+                SwingUtilities.invokeLater(() -> {
+                Game game = new Game(user.getName());
+                game.frame.setVisible(true);
+                new Thread(game).start(); // Start the game loop in a new thread.
+                });
+            }
         });
+        
     }
 
     public static boolean isGameOver(){

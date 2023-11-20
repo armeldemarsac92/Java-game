@@ -3,3 +3,5 @@ Test/*.class
 Exceptions/*.class
 GraphicInterface/*.class
 PixelMap/*.class
+tasks.txt
+Data/*.class

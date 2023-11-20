@@ -158,7 +158,7 @@ public abstract class AMob extends AUnit{
     public void killInstance(){
         System.out.println("Instance of " + this.getClass().getSimpleName() + " was killed");
         GlobalUnits.remove(this);
-        PointSystem.earnCoins(this.coinValue);
+        UserInterface.earnCoins(this.coinValue);
         this.cleanFromView();
     }   
 

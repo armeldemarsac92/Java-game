@@ -92,7 +92,7 @@ public abstract class ATower extends AUnit {
     /*---------- Methods ---------- */
     
     public void upgrade() throws MaximumLevelReachedException {
-        if(PointSystem.getCoins() >= this.price){
+        if(UserInterface.getCoins() >= this.price){
             if (this.level >= this.maxLevel) {
                 throw new MaximumLevelReachedException("Maximum level reached (" + this.level + ")");
             } else {
@@ -101,7 +101,7 @@ public abstract class ATower extends AUnit {
                 this.setDamageRate(this.getDamageRate() * 2); // Double damage rate
                 this.setPrice(this.price * 2); // Double tower price
                 this.setRange(400);
-                PointSystem.spendCoins(this.price);
+                UserInterface.spendCoins(this.price);
         
                 // Update core file path based on the type of tower and its new level
                 if (this instanceof IceTower) {
@@ -182,7 +182,7 @@ public abstract class ATower extends AUnit {
                     AMob mob = (AMob) unitsInRange.get(currentIndex);
                     if (mob.isAlive()) {
                         thisTower.attack(mob);
-                        PointSystem.earnCoins(mob.getCoinsValue());
+                        UserInterface.earnCoins(mob.getCoinsValue());
                     }
 
                     // Move to the next mob in the list
