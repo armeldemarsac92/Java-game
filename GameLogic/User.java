@@ -1,52 +1,15 @@
 package GameLogic;
 
-import javax.swing.JTextField;
-
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
-public class User extends JDialog {
-    private JTextField name;
+public class User {
+    private String name;
     private static int userHp = 500;
 
-    public User(){
-        super(new JFrame("Enter your username"), "Add Member");
-
-        this.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-        this.setMinimumSize(new Dimension(500, 500));
-        this.name = new JTextField();
-
-
-
-
-        JButton inputButton = new JButton("Submit");
-        inputButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                System.out.println("Name entered :" + getName());
-                close();
-            }});
-
-        this.setLayout(new GridLayout(3, 1, 5, 5));
-
-        this.add(name);
-        this.add(inputButton);
-        this.pack();
-    }
-
-    private void close(){
-        this.dispose();
+    public User(String name){
+        this.name = name;
     }
 
     public String getName(){
-        return this.name.getText();
+        return this.name;
     }
 
     public static int getUserHp(){

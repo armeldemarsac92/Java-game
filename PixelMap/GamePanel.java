@@ -1,28 +1,31 @@
 package PixelMap;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import java.util.TimerTask;
-import java.util.Timer;
-import java.util.Random;
 import GameLogic.*;
 
 public class GamePanel extends JPanel {
-    private Timer waveTimer;
-    private int waveInterval = 30000; // 30 seconds between waves
-    private int currentWave;
-    private int hordeSize = 2;
-    private int threashold = 10;
-    private int maxTanker = 2;
-    private int mobSpeed = 1;
+    
 
     private JLabel backgroundLabel;
     private JLabel pauseLabel;
 
-    public GamePanel(Dimension screenSize) {
+    private JPopupMenu pauseMenu;
+
+    private boolean isPauseMenuOpen = false;
+
+    public GamePanel(Dimension screenSize, Game game) {
         setPreferredSize(screenSize); // Set the panel size to the screen size
         setLayout(null); // Continue using null layout for absolute positioning
 
@@ -30,11 +33,21 @@ public class GamePanel extends JPanel {
         // Initialize background first
         initializeBackground(screenSize);
         // Then initialize pause icon
-        initializePauseIcon(screenSize);
+        initializePauseIcon(screenSize, game);
         // Initialize units
         initializeUnits();
 
         setComponentZOrder(pauseLabel, 0);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (isPauseMenuOpen) {
+                    game.resumeGame();
+                    isPauseMenuOpen = false;
+                }
+            }
+        });
     }
 
     private void initializeBackground(Dimension screenSize) {
@@ -56,20 +69,109 @@ public class GamePanel extends JPanel {
         }
     }
 
-    private void initializePauseIcon(Dimension screenSize) {
+    private void initializePauseIcon(Dimension screenSize, Game game) {
         try {
             Image pauseImage = ImageIO.read(new File("assets/bouton-pause.png"));
             Image scaledPauseImage = pauseImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
             pauseLabel = new JLabel(new ImageIcon(scaledPauseImage));
-    
+
             pauseLabel.setBounds(22, 22, 50, 50);
-    
+
             add(pauseLabel);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        createPauseMenu(game);
+
+        pauseLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                game.pauseGame();
+
+                // Calculer la position centrale de l'écran
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                int x = (screenSize.width - pauseMenu.getPreferredSize().width) / 2;
+                int y = (screenSize.height - pauseMenu.getPreferredSize().height) / 2;
+
+                // Afficher le menu contextuel au centre de l'écran
+                pauseMenu.show(e.getComponent(), x, y);
+            }
+        });
+
     }
-    
+
+    private void createPauseMenu(Game game) {
+        pauseMenu = new JPopupMenu("Pause Menu");
+        Font menuFont = new Font("Arial", Font.BOLD, 16);
+
+        String[] menuItems = { "Continue", "Restart", "Menu" };
+        for (String itemText : menuItems) {
+            JMenuItem menuItem = new JMenuItem();
+            menuItem.setLayout(new BorderLayout());
+
+            JLabel label = new JLabel(itemText, SwingConstants.CENTER);
+            label.setFont(menuFont);
+            menuItem.add(label, BorderLayout.CENTER);
+
+            Dimension menuItemSize = new Dimension(350, 80);
+            menuItem.setPreferredSize(menuItemSize);
+
+            menuItem.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    menuItem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    menuItem.setCursor(Cursor.getDefaultCursor());
+                }
+            });
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (itemText.equals("Menu")) {
+                        // Close the current game window
+                        SwingUtilities.getWindowAncestor(GamePanel.this).dispose();
+            
+                        // Create and show the main menu
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                GameMenu menu = new GameMenu();
+                                menu.setVisible(true);
+                            }
+                        });
+                    }
+                }
+            });
+            
+
+            pauseMenu.add(menuItem);
+        }
+
+        pauseMenu.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                isPauseMenuOpen = true;
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                if (isPauseMenuOpen) {
+                    game.resumeGame();
+                }
+                isPauseMenuOpen = false;
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                if (isPauseMenuOpen) {
+                    game.resumeGame();
+                }
+                isPauseMenuOpen = false;
+            }
+        });
+
+    }
 
     private void initializeUnits() {
         new ArcherTower(new Coordinates(350, 250), GamePanel.this);
@@ -78,85 +180,12 @@ public class GamePanel extends JPanel {
         new ArcherTower(new Coordinates(1850, 750), GamePanel.this);
         new ArcherTower(new Coordinates(550, 750), GamePanel.this);
 
-        waveTimer = new Timer();
-        waveTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                spawnWave();
-            }
-        }, 0, waveInterval);
     }
 
-    private void spawnWave() {
-        currentWave++;
-        hordeSize++;
-        waveInterval += 10;
-        System.out.println("Spawning wave: " + currentWave);
-        Random random = new Random();
-        int minTimer = 800;
-        int maxTimer = 2000;
-        int randomTimer = minTimer + random.nextInt(maxTimer - minTimer + 1);
-
-        new Timer().schedule(new TimerTask() {
-            private int count = 0;
-            int tankerCount = 0;
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            int standardY = (int) (screenSize.getHeight() / 2) - 100;
-
-            @Override
-            public void run() {
-                if (count < hordeSize) {
-                    int minY = standardY - 50; // Minimum Y-coordinate
-                    int maxY = standardY + 50; // Maximum Y-coordinate
-                    int randomY = minY + random.nextInt(maxY - minY + 1); // Generate a random Y-coordinate within the
-                                                                          // range
-                    int minChance = 0;
-                    int maxChance = 10;
-                    int tankerApparitionChance = random.nextInt(maxChance - minChance + 1);
-
-                    Barbarian barbarian = new Barbarian(new Coordinates(-400, randomY), GamePanel.this);
-                    barbarian.setSpeed(mobSpeed);
-                    count++;
-
-                    if (tankerApparitionChance >= threashold && tankerCount <= maxTanker && count > 3){
-                        new Tanker(new Coordinates(-400, randomY), GamePanel.this);
-                        count += 2;
-                        tankerCount++;
-                    }
-
-                } else {
-                    this.cancel(); // Stop the timer once all mobs are spawned
-                }
-            }
-        }, 0, randomTimer); // random delay between each mob spawn
-        threashold--;
-        if (currentWave % 5 == 0) {
-            mobSpeed++;
-            maxTanker++;
-        }
-    }
+    
 
     public GamePanel getInstance() {
         return this;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Tower Defense Game");
-
-            // Get the screen size
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            GamePanel panel = new GamePanel(screenSize);
-
-            frame.add(panel);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize frame before making it visible
-            frame.setVisible(true);
-
-            // Debugging output
-            System.out.println("Frame size: " + frame.getSize());
-            System.out.println("Panel preferred size: " + panel.getPreferredSize());
-        });
-    }
-
 }
+
