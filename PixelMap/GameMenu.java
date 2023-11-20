@@ -1,6 +1,9 @@
-package GraphicInterface;
+package PixelMap;
 
 import javax.swing.*;
+
+import PixelMap.Game;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,9 +55,8 @@ public class GameMenu extends JFrame {
         startButton.setForeground(Color.decode("#463c32"));
         startButton.setBackground(Color.decode("#79AD9A"));
         startButton.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.decode("#DECBA4"), 2),
-            BorderFactory.createEmptyBorder(10, 20, 10, 20)
-        ));
+                BorderFactory.createLineBorder(Color.decode("#DECBA4"), 2),
+                BorderFactory.createEmptyBorder(10, 20, 10, 20)));
         startButton.setFocusPainted(false);
         startButton.setContentAreaFilled(false);
         startButton.setOpaque(true);
@@ -78,23 +80,20 @@ public class GameMenu extends JFrame {
                 setVisible(false);
                 dispose();
 
-                JFrame mapFrame = new JFrame("Game Map");
-                mapFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                Map mapPanel = new Map();
-                mapFrame.add(mapPanel);
-                mapFrame.pack();
-                mapFrame.setLocationRelativeTo(null);
-                mapFrame.setVisible(true);
+                // Création et lancement du jeu
+                Game game = new Game();
+                game.frame.setVisible(true);
+                new Thread(game).start();
             }
         });
-        
+
         backgroundPanel.setLayout(null);
 
         int buttonWidth = 200;
         int buttonHeight = 50;
         int x = (screenSize.width - buttonWidth) / 2;
         int y = (int) (screenSize.height * 0.8) - buttonHeight;
-        
+
         startButton.setBounds(x, y, buttonWidth, buttonHeight);
 
         backgroundPanel.add(startButton);
