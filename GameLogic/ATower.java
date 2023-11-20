@@ -5,6 +5,9 @@ import PixelMap.GamePanel;
 import java.awt.*;
 import java.io.File;
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ public abstract class ATower extends AUnit {
     private int level = 0;
     private int maxLevel = 2;
     Timer damageTimer = new Timer();
+    private JLabel towerLevelLabel;
 
 
     /*---------- Constructor ---------- */
@@ -31,6 +35,13 @@ public abstract class ATower extends AUnit {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        this.towerLevelLabel = new JLabel("Level: " + this.level);
+        this.towerLevelLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        this.towerLevelLabel.setForeground(Color.BLACK);
+        parentContainer.add(this.towerLevelLabel);
+        parentContainer.setComponentZOrder(this.towerLevelLabel, Math.abs(GlobalUnits.getIndex(this) * (-1)) + 1); // Place it above the mob
+
         this.damageTimer=null;
         this.attackUnitsInRange();
         System.out.println("----------- Tower instantiated -----------");
@@ -102,7 +113,8 @@ public abstract class ATower extends AUnit {
                 this.setDamageRate(this.getDamageRate() * 2);
                 this.setPrice(this.price * 2); 
                 this.setRange(this.range + 50);
-        
+                SwingUtilities.invokeLater(this::updateTextLabelPosition);
+
                 // Update core file path based on the type of tower and its new level
                 if (this instanceof IceTower) {
                     this.sizeX = 400;
@@ -113,7 +125,6 @@ public abstract class ATower extends AUnit {
                     }
                 }
         
-                // Reload animation frames with the new assets
                 this.reloadAnimationFramesAsync();
                 
             }
@@ -172,6 +183,7 @@ public abstract class ATower extends AUnit {
     @Override
     public void attackUnitsInRange() {
         if (this.damageTimer == null) {
+            SwingUtilities.invokeLater(this::updateTextLabelPosition);
             this.damageTimer = new Timer();
             System.out.println("attack");
             this.damageTimer.scheduleAtFixedRate(new TimerTask() {
@@ -193,6 +205,19 @@ public abstract class ATower extends AUnit {
         }
     }
     
+    private void updateTextLabelPosition() {
+        try {
+            Coordinates coords = this.getUnitCoordinates();
+            
+            // Check if hpLabel is not null before using it
+            if (this.towerLevelLabel != null) {
+                this.towerLevelLabel.setBounds(coords.get("x"), coords.get("y") - 20, 100, 20); // Adjust as needed
+                this.towerLevelLabel.setText("Level: " + this.level); // Set text as needed
+            }
+        } catch (NoSuchCoordinateKeyException e) {
+            e.printStackTrace(); // Handle exception
+        }
+    }
 
     
     
@@ -206,8 +231,6 @@ public abstract class ATower extends AUnit {
             castedUnit.setHp(this.getDamage());
             System.out.println(this.getClass().getSimpleName() + " inflicts " + this.getDamage() + " damage to " 
                 + castedUnit.getClass().getSimpleName() + "(" + castedUnit.getHp() + " hp left)");
-        } else {
-            // castedUnit.killInstance();
-        }
+        } 
     }
 }
