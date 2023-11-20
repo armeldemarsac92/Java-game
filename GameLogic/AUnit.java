@@ -145,7 +145,6 @@ public abstract class AUnit implements IGameObject, MouseListener {
         try {
             ((ATower)this).upgrade();
         } catch (MaximumLevelReachedException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
     }
