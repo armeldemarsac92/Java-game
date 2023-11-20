@@ -24,6 +24,7 @@ public class GamePanel extends JPanel {
     private JPopupMenu pauseMenu;
 
     private boolean isPauseMenuOpen = false;
+    private boolean isHowToPlayPopupOpen = false;
 
     public GamePanel(Dimension screenSize, Game game) {
         setPreferredSize(screenSize); // Set the panel size to the screen size
@@ -104,7 +105,7 @@ public class GamePanel extends JPanel {
         pauseMenu = new JPopupMenu("Pause Menu");
         Font menuFont = new Font("Arial", Font.BOLD, 16);
 
-        String[] menuItems = { "Continue", "Restart", "Menu" };
+        String[] menuItems = { "Continue", "Restart", "Menu", "How to play ?" };
         for (String itemText : menuItems) {
             JMenuItem menuItem = new JMenuItem();
             menuItem.setLayout(new BorderLayout());
@@ -146,6 +147,20 @@ public class GamePanel extends JPanel {
                     }
                 }
             });
+
+            menuItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (itemText.equals("How to play ?")) {
+                        isHowToPlayPopupOpen = true;
+                        JOptionPane.showMessageDialog(GamePanel.this,
+                            "MusaReign is an engaging tower defense game where the objective is straightforward:\n prevent enemies from crossing the entire map to avoid losing life points.\n To achieve this, players must strategically construct defense towers using coins. Each successful\n defense not only halts enemy progress but also enhances the player's ability to fortify their\n defenses further. The game combines strategic planning with quick decision-making, offering\n an immersive experience for all tower defense enthusiasts.",
+                            "How to Play", JOptionPane.INFORMATION_MESSAGE);
+                        // isHowToPlayPopupOpen = false;
+                        // checkAndResumeGame(game);
+                    }
+                }
+            });
             
 
             pauseMenu.add(menuItem);
@@ -164,13 +179,20 @@ public class GamePanel extends JPanel {
             }
 
             public void popupMenuCanceled(PopupMenuEvent e) {
-                if (isPauseMenuOpen) {
+                if (!isHowToPlayPopupOpen) {
                     game.resumeGame();
                 }
+        
                 isPauseMenuOpen = false;
             }
         });
 
+    }
+
+    private void checkAndResumeGame(Game game) {
+        if (!isPauseMenuOpen && !isHowToPlayPopupOpen) {
+            game.resumeGame();
+        }
     }
 
     private void initializeUnits() {
