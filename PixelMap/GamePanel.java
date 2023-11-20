@@ -14,7 +14,7 @@ public class GamePanel extends JPanel {
     private Timer waveTimer;
     private int waveInterval = 30000; // 30 seconds between waves
     private int currentWave;
-    private int hordeSize = 4;
+    private int hordeSize = 2;
     private int threashold = 10;
     private int maxTanker = 2;
     private int mobSpeed = 1;
